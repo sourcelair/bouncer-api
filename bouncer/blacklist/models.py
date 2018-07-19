@@ -1,11 +1,14 @@
 from django.db import models
 
 # Create your models here.
-class IP_Entry(models.Model):
+class IPEntry(models.Model):
 	entry_value = models.GenericIPAddressField()
+	reason = models.TextField()
 
-class Email_Entry(models.Model):
+class EmailEntry(models.Model):
 	entry_value = models.EmailField()
+	reason = models.TextField()
 
-class Host_Entry(models.Model):
+class EmailHostEntry(models.Model):
 	entry_value = models.CharField(max_length = 254)
+	reason = models.TextField()
