@@ -12,7 +12,7 @@ class EntryBase(models.Model):
         abstract = True
 
 
-class IPEntry(EntryReason):
+class IPEntry(EntryBase):
     """
     Model for IP entries in blacklist.
     """
@@ -20,7 +20,7 @@ class IPEntry(EntryReason):
     entry_value = models.GenericIPAddressField()
 
 
-class EmailEntry(EntryReason):
+class EmailEntry(EntryBase):
     """
     Model for email entries in blacklist.
     """
@@ -28,7 +28,7 @@ class EmailEntry(EntryReason):
     entry_value = models.EmailField()
 
 
-class EmailHostEntry(EntryReason):
+class EmailHostEntry(EntryBase):
     """
     Model for email host entries in blacklist.
     """

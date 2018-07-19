@@ -24,7 +24,7 @@ class BrainTests(TestCase):
 
     def test_is_email_blacklisted_with_blacklisted_email(self):
         """
-        is_email_blacklisted() returns True for ips which are in EmailEntry model.
+        is_email_blacklisted() returns True for emails which are in EmailEntry model.
         """
 
         blacklisted_email = "a@spam.com"
@@ -34,8 +34,28 @@ class BrainTests(TestCase):
 
     def test_is_email_blacklisted_with_not_blacklisted_email(self):
         """
-        is_email_blacklisted() returns True for ips which are in EmailEntry model.
+        is_email_blacklisted() returns False for emails which are not in EmailEntry model.
         """
 
         not_blacklisted_email = "a@test.com"
         self.assertIs(is_email_blacklisted(not_blacklisted_email), False)
+
+    def test_is_email_blacklisted_with_blacklisted_host(self):
+        """
+        is_email_blacklisted() returns True for emails whose host is in
+        EmailHostEntry model.
+        """
+
+        blacklisted_host = "spam.com"
+        host_entry = models.EmailHostEntry(entry_value=blacklisted_host)
+        host_entry.save()
+        self.assertIs(is_email_blacklisted("a@" + blacklisted_host), True)
+
+    def test_is_email_blacklisted_with_not_blacklisted_host(self):
+        """
+        is_email_blacklisted() returns False for emails whose host is not in
+        EmailHostEntry model.
+        """
+
+        not_blacklisted_host = "test.com"
+        self.assertIs(is_email_blacklisted("a@" + not_blacklisted_host), False)

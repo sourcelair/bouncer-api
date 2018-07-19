@@ -18,4 +18,9 @@ def is_email_blacklisted(email):
 
     if models.EmailEntry.objects.filter(entry_value=email):
         return True
+    else:
+        host = email.split("@")[1]
+        print(host)
+        if models.EmailHostEntry.objects.filter(entry_value=host):
+            return True
     return False
