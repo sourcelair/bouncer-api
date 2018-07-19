@@ -1,5 +1,3 @@
 .secrets
-bouncer/db.sqlite3
-bouncer/bouncer/__pycache__
-bouncer/blacklist/__pycache__
-bouncer/blacklist/migrations/__pycache__
+db.sqlite3
+__pycache__
