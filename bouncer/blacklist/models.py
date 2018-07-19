@@ -1,8 +1,10 @@
 from django.db import models
 
 
-class EntryReason(models.Model):
-    """Abstract base class for the reason why an entry is blacklisted."""
+class EntryBase(models.Model):
+    """
+    Abstract base class for the reason why an entry is blacklisted.
+    """
 
     reason = models.TextField()
 
@@ -11,18 +13,24 @@ class EntryReason(models.Model):
 
 
 class IPEntry(EntryReason):
-    """Model for IP entries in blacklist."""
+    """
+    Model for IP entries in blacklist.
+    """
 
     entry_value = models.GenericIPAddressField()
 
 
 class EmailEntry(EntryReason):
-    """Model for email entries in blacklist."""
+    """
+    Model for email entries in blacklist.
+    """
 
     entry_value = models.EmailField()
 
 
 class EmailHostEntry(EntryReason):
-    """Model for email host entries in blacklist."""
+    """
+    Model for email host entries in blacklist.
+    """
 
     entry_value = models.CharField(max_length=254)
