@@ -5,51 +5,61 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('blacklist', '0001_initial'),
-    ]
+    dependencies = [("blacklist", "0001_initial")]
 
     operations = [
         migrations.CreateModel(
-            name='EmailEntry',
+            name="EmailEntry",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('reason', models.TextField()),
-                ('entry_value', models.EmailField(max_length=254)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("reason", models.TextField()),
+                ("entry_value", models.EmailField(max_length=254)),
             ],
-            options={
-                'abstract': False,
-            },
+            options={"abstract": False},
         ),
         migrations.CreateModel(
-            name='EmailHostEntry',
+            name="EmailHostEntry",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('reason', models.TextField()),
-                ('entry_value', models.CharField(max_length=254)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("reason", models.TextField()),
+                ("entry_value", models.CharField(max_length=254)),
             ],
-            options={
-                'abstract': False,
-            },
+            options={"abstract": False},
         ),
         migrations.CreateModel(
-            name='IPEntry',
+            name="IPEntry",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('reason', models.TextField()),
-                ('entry_value', models.GenericIPAddressField()),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("reason", models.TextField()),
+                ("entry_value", models.GenericIPAddressField()),
             ],
-            options={
-                'abstract': False,
-            },
+            options={"abstract": False},
         ),
-        migrations.DeleteModel(
-            name='Email_Entry',
-        ),
-        migrations.DeleteModel(
-            name='Host_Entry',
-        ),
-        migrations.DeleteModel(
-            name='IP_Entry',
-        ),
+        migrations.DeleteModel(name="Email_Entry"),
+        migrations.DeleteModel(name="Host_Entry"),
+        migrations.DeleteModel(name="IP_Entry"),
     ]

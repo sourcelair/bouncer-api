@@ -10,7 +10,6 @@ class EntryReason(models.Model):
         abstract = True
 
 
-# Create your models here.
 class IPEntry(EntryReason):
     """Model for IP entries in blacklist."""
 
