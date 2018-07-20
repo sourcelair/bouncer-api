@@ -3,6 +3,7 @@ python:
   - "3.6"
   - "3.7-dev"
 install:
+  - pip install pipenv==2018.7.1
   - pipenv install --dev --system
 script:
   - black --check ./
