@@ -7,5 +7,7 @@ install:
   - pipenv install --dev --system
 script:
   - black --check ./
+  - mkdir .secrets
+  - echo 'DemoSecret' > .secrets/secret-key
   - cd bouncer
   - python manage.py test
