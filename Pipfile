@@ -1,0 +1,13 @@
+[[source]]
+name = "pypi"
+verify_ssl = true
+url = "https://pypi.org/simple"
+
+[requires]
+python_version = "3.6"
+
+[dev-packages]
+black = "==18.6b4"
+
+[packages]
+django = "*"
