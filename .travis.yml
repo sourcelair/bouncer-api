@@ -1,0 +1,10 @@
+language: python
+python:
+  - "3.6"
+  - "3.7-dev"
+install:
+  - pipenv install --dev --system
+script:
+  - black --check ./
+  - cd bouncer
+  - python manage.py test
