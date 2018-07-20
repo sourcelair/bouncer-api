@@ -23,44 +23,44 @@ class BrainTests(TestCase):
 
     def test_is_ip_blacklisted_with_blacklisted_ip(self):
         """
-		is_ip_blacklisted() returns True for ips which are in IPEntry model.
-		"""
+        is_ip_blacklisted() returns True for ips which are in IPEntry model.
+        """
 
         self.assertTrue(is_ip_blacklisted(self.blacklisted_ip))
 
     def test_is_ip_blacklisted_with_not_blacklisted_ip(self):
         """
-		is_ip_blacklisted() returns False for ips which are not in IPEntry model.
-		"""
+        is_ip_blacklisted() returns False for ips which are not in IPEntry model.
+        """
 
         self.assertFalse(is_ip_blacklisted(self.not_blacklisted_ip))
 
     def test_is_email_blacklisted_with_blacklisted_email(self):
         """
-		is_email_blacklisted() returns True for emails which are in EmailEntry model.
-		"""
+        is_email_blacklisted() returns True for emails which are in EmailEntry model.
+        """
 
         self.assertTrue(is_email_blacklisted(self.blacklisted_email))
 
     def test_is_email_blacklisted_with_not_blacklisted_email(self):
         """
-		is_email_blacklisted() returns False for emails which are not in EmailEntry model.
-		"""
+        is_email_blacklisted() returns False for emails which are not in EmailEntry model.
+        """
 
         self.assertFalse(is_email_blacklisted(self.not_blacklisted_email))
 
     def test_is_email_blacklisted_with_blacklisted_host(self):
         """
-		is_email_blacklisted() returns True for emails whose host is in
-		EmailHostEntry model.
-		"""
+        is_email_blacklisted() returns True for emails whose host is in
+        EmailHostEntry model.
+        """
 
         self.assertTrue(is_email_blacklisted(f"a@{self.blacklisted_host}"))
 
     def test_is_email_blacklisted_with_not_blacklisted_host(self):
         """
-		is_email_blacklisted() returns False for emails whose host is not in
-		EmailHostEntry model.
-		"""
+        is_email_blacklisted() returns False for emails whose host is not in
+        EmailHostEntry model.
+        """
 
         self.assertFalse(is_email_blacklisted(f"a@{self.not_blacklisted_host}"))
