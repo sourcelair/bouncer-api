@@ -1,6 +1,8 @@
 from django.contrib import admin
 from blacklist import models
 
-admin.site.register(models.IPEntry)
-admin.site.register(models.EmailEntry)
-admin.site.register(models.EmailHostEntry)
+
+@admin.register(models.IPEntry, models.EmailEntry, models.EmailHostEntry)
+class EntryAdmin(admin.ModelAdmin):
+    fields = ["entry_value", "reason"]
+    search_fields = ["entry_value"]
