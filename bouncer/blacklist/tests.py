@@ -11,26 +11,40 @@ class BrainTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super(BrainTests, cls).setUpClass()
-        cls.blacklisted_ip = "1.2.3.4"
+        cls.lower_case_blacklisted_ip = "2001:0:3238:dfe1:63::fefb"
+        cls.upper_case_blacklisted_ip = "2001:0:3238:DFE1:63::FEFB"
         cls.not_blacklisted_ip = "255.254.253.251"
-        cls.blacklisted_email = "a@spam.com"
+        cls.lower_case_blacklisted_email = "a@spam.com"
+        cls.upper_case_blacklisted_email = "A@SPAM.COM"
         cls.not_blacklisted_email = "a@test.com"
-        cls.blacklisted_host = "spam.com"
+        cls.lower_case_blacklisted_host = "spam.com"
+        cls.upper_case_blacklisted_host = "SPAM.COM"
         cls.not_blacklisted_host = "test.com"
 
-        ip_entry = models.IPEntry(entry_value=cls.blacklisted_ip)
+        ip_entry = models.IPEntry(entry_value=cls.lower_case_blacklisted_ip)
         ip_entry.save()
-        email_entry = models.EmailEntry(entry_value=cls.blacklisted_email)
+        email_entry = models.EmailEntry(entry_value=cls.lower_case_blacklisted_email)
         email_entry.save()
-        host_entry = models.EmailHostEntry(entry_value=cls.blacklisted_host)
+        host_entry = models.EmailHostEntry(entry_value=cls.lower_case_blacklisted_host)
         host_entry.save()
 
-    def test_is_ip_blacklisted_with_blacklisted_ip(self):
+    def test_is_ip_blacklisted_with_lower_case_blacklisted_ip_and_lower_case_query(
+        self
+    ):
         """
         is_ip_blacklisted() returns True for ips which are in IPEntry model.
         """
 
-        self.assertTrue(is_ip_blacklisted(self.blacklisted_ip))
+        self.assertTrue(is_ip_blacklisted(self.lower_case_blacklisted_ip))
+
+    def test_is_ip_blacklisted_with_lower_case_blacklisted_ip_and_upper_case_query(
+        self
+    ):
+        """
+        is_ip_blacklisted() returns True for ips which are in IPEntry model.
+        """
+
+        self.assertTrue(is_ip_blacklisted(self.upper_case_blacklisted_ip))
 
     def test_is_ip_blacklisted_with_not_blacklisted_ip(self):
         """
@@ -39,12 +53,23 @@ class BrainTests(TestCase):
 
         self.assertFalse(is_ip_blacklisted(self.not_blacklisted_ip))
 
-    def test_is_email_blacklisted_with_blacklisted_email(self):
+    def test_is_email_blacklisted_with_lower_case_blacklisted_email_and_lower_case_query(
+        self
+    ):
         """
         is_email_blacklisted() returns True for emails which are in EmailEntry model.
         """
 
-        self.assertTrue(is_email_blacklisted(self.blacklisted_email))
+        self.assertTrue(is_email_blacklisted(self.lower_case_blacklisted_email))
+
+    def test_is_email_blacklisted_with_lower_case_blacklisted_email_and_upper_case_query(
+        self
+    ):
+        """
+        is_email_blacklisted() returns True for emails which are in EmailEntry model.
+        """
+
+        self.assertTrue(is_email_blacklisted(self.upper_case_blacklisted_email))
 
     def test_is_email_blacklisted_with_not_blacklisted_email(self):
         """
@@ -53,13 +78,25 @@ class BrainTests(TestCase):
 
         self.assertFalse(is_email_blacklisted(self.not_blacklisted_email))
 
-    def test_is_email_blacklisted_with_blacklisted_host(self):
+    def test_is_email_blacklisted_with_lower_case_blacklisted_host_and_lower_case_query(
+        self
+    ):
         """
         is_email_blacklisted() returns True for emails whose host is in
         EmailHostEntry model.
         """
 
-        self.assertTrue(is_email_blacklisted(f"a@{self.blacklisted_host}"))
+        self.assertTrue(is_email_blacklisted(f"a@{self.lower_case_blacklisted_host}"))
+
+    def test_is_email_blacklisted_with_lower_case_blacklisted_host_and_upper_case_query(
+        self
+    ):
+        """
+        is_email_blacklisted() returns True for emails whose host is in
+        EmailHostEntry model.
+        """
+
+        self.assertTrue(is_email_blacklisted(f"a@{self.upper_case_blacklisted_host}"))
 
     def test_is_email_blacklisted_with_not_blacklisted_host(self):
         """
@@ -69,13 +106,25 @@ class BrainTests(TestCase):
 
         self.assertFalse(is_email_blacklisted(f"a@{self.not_blacklisted_host}"))
 
-    def test_is_email_host_blacklisted_with_blacklisted_host(self):
+    def test_is_email_host_blacklisted_with_lower_case_blacklisted_host_and_lower_case_query(
+        self
+    ):
         """
         is_email_host_blacklisted() returns True for hosts which are in
         EmailHostEntry model.
         """
 
-        self.assertTrue(is_email_host_blacklisted(self.blacklisted_host))
+        self.assertTrue(is_email_host_blacklisted(self.lower_case_blacklisted_host))
+
+    def test_is_email_host_blacklisted_with_lower_case_blacklisted_host_and_upper_case_query(
+        self
+    ):
+        """
+        is_email_host_blacklisted() returns True for hosts which are in
+        EmailHostEntry model.
+        """
+
+        self.assertTrue(is_email_host_blacklisted(self.upper_case_blacklisted_host))
 
     def test_is_email_host_blacklisted_with_not_blacklisted_host(self):
         """
