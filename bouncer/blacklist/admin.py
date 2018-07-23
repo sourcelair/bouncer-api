@@ -1,3 +1,6 @@
 from django.contrib import admin
+from blacklist import models
 
-# Register your models here.
+admin.site.register(models.IPEntry)
+admin.site.register(models.EmailEntry)
+admin.site.register(models.EmailHostEntry)
