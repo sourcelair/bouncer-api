@@ -64,3 +64,59 @@ class BrainTests(TestCase):
         """
 
         self.assertFalse(is_email_blacklisted(f"a@{self.not_blacklisted_host}"))
+
+
+class ModelTests(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super(ModelTests, cls).setUpClass()
+
+        cls.ip = "2001:0:3238:dfe1:63::fefb"
+        cls.email = "a@spam.com"
+        cls.email_host = "spam.com"
+
+        ip_entry = models.IPEntry(entry_value=cls.ip)
+        ip_entry.save()
+        email_entry = models.EmailEntry(entry_value=cls.email)
+        email_entry.save()
+        email_host_entry = models.EmailHostEntry(entry_value=cls.email_host)
+        email_host_entry.save()
+
+    def test_add_existing_ip_in_database(self):
+        '''
+        Test that checking if correctly we cannot add an existing ip in our database.
+        '''
+        pass
+
+    def test_add_existing_ip_in_database_in_different_case(self):
+        '''
+        Test that checking if correctly we cannot add an existing ip in our database,
+        even if it has different case.
+        '''
+        pass
+
+    def test_add_existing_email_in_database(self):
+        '''
+        Test that checking if correctly we cannot add an existing email in our database.
+        '''
+        pass
+
+    def test_add_existing_email_in_database_in_different_case(self):
+        '''
+        Test that checking if correctly we cannot add an existing email in our database,
+        even if it has different case.
+        '''
+        pass
+
+    def test_add_existing_email_host_in_database(self):
+        '''
+        Test that checking if correctly we cannot add an existing email host in our database.
+        '''
+        pass
+
+    def test_add_existing_email_host_in_database_in_different_case(self):
+        '''
+        Test that checking if correctly we cannot add an existing email host in our database,
+        even if it has different case.
+        '''
+        pass
