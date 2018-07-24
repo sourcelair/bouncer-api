@@ -5,7 +5,7 @@ def is_ip_blacklisted(ip):
     """
     Checks if ip is in IPEntry model.
     """
-    print(ip)
+    
     if models.IPEntry.objects.filter(entry_value__iexact=ip):
         return True
     return False
