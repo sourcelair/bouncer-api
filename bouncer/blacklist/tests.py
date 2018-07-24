@@ -29,7 +29,7 @@ class BrainTests(TestCase):
         self
     ):
         """
-        is_ip_blacklisted() returns True for ips which are in IPEntry model.
+        Test that checking a blacklisted ip correctly returns True.
         """
 
         self.assertTrue(is_ip_blacklisted(self.lower_case_blacklisted_ip))
@@ -38,14 +38,16 @@ class BrainTests(TestCase):
         self
     ):
         """
-        is_ip_blacklisted() returns True for ips which are in IPEntry model.
+        Test that checking a blacklisted ip correctly returns True,
+        even if the query is in upper-case and the ip is saved with lower case
+        in our database.
         """
 
         self.assertTrue(is_ip_blacklisted(self.lower_case_blacklisted_ip.upper()))
 
     def test_is_ip_blacklisted_with_not_blacklisted_ip(self):
         """
-        is_ip_blacklisted() returns False for ips which are not in IPEntry model.
+        Test that checking a non blacklisted ip correctly returns False.
         """
 
         self.assertFalse(is_ip_blacklisted(self.not_blacklisted_ip))
@@ -54,7 +56,7 @@ class BrainTests(TestCase):
         self
     ):
         """
-        is_email_blacklisted() returns True for emails which are in EmailEntry model.
+        Test that checking a blacklisted email correctly returns True.
         """
 
         self.assertTrue(is_email_blacklisted(self.lower_case_blacklisted_email))
@@ -63,14 +65,16 @@ class BrainTests(TestCase):
         self
     ):
         """
-        is_email_blacklisted() returns True for emails which are in EmailEntry model.
+        Test that checking a blacklisted email correctly returns True,
+        even if the query is in upper-case and the email is saved with lower case
+        in our database.
         """
 
         self.assertTrue(is_email_blacklisted(self.lower_case_blacklisted_email.upper()))
 
     def test_is_email_blacklisted_with_not_blacklisted_email(self):
         """
-        is_email_blacklisted() returns False for emails which are not in EmailEntry model.
+        Test that checking a non blacklisted email correctly returns False.
         """
 
         self.assertFalse(is_email_blacklisted(self.not_blacklisted_email))
@@ -79,8 +83,8 @@ class BrainTests(TestCase):
         self
     ):
         """
-        is_email_blacklisted() returns True for emails whose host is in
-        EmailHostEntry model.
+        Test that checking a blacklisted email correctly returns True,
+        even if only the email host is in our database.
         """
 
         self.assertTrue(is_email_blacklisted(f"a@{self.lower_case_blacklisted_host}"))
@@ -89,16 +93,18 @@ class BrainTests(TestCase):
         self
     ):
         """
-        is_email_blacklisted() returns True for emails whose host is in
-        EmailHostEntry model.
+        Test that checking a blacklisted email correctly returns True,
+        even if the query is in upper-case and only the email host is saved
+        with lower case in our database.
         """
 
-        self.assertTrue(is_email_blacklisted(f"a@{self.lower_case_blacklisted_host.upper()}"))
+        self.assertTrue(
+            is_email_blacklisted(f"a@{self.lower_case_blacklisted_host.upper()}")
+        )
 
     def test_is_email_blacklisted_with_not_blacklisted_host(self):
         """
-        is_email_blacklisted() returns False for emails whose host is not in
-        EmailHostEntry model.
+        Test that checking a non blacklisted email correctly returns False.
         """
 
         self.assertFalse(is_email_blacklisted(f"a@{self.not_blacklisted_host}"))
@@ -107,8 +113,7 @@ class BrainTests(TestCase):
         self
     ):
         """
-        is_email_host_blacklisted() returns True for hosts which are in
-        EmailHostEntry model.
+        Test that checking a blacklisted email host correctly returns True.
         """
 
         self.assertTrue(is_email_host_blacklisted(self.lower_case_blacklisted_host))
@@ -117,16 +122,18 @@ class BrainTests(TestCase):
         self
     ):
         """
-        is_email_host_blacklisted() returns True for hosts which are in
-        EmailHostEntry model.
+        Test that checking a blacklisted email host correctly returns True,
+        even if the query is in upper-case and the email host is saved with lower case
+        in our database.
         """
 
-        self.assertTrue(is_email_host_blacklisted(self.lower_case_blacklisted_host.upper()))
+        self.assertTrue(
+            is_email_host_blacklisted(self.lower_case_blacklisted_host.upper())
+        )
 
     def test_is_email_host_blacklisted_with_not_blacklisted_host(self):
         """
-        is_email_host_blacklisted() returns False for hosts which are not in
-        EmailHostEntry model.
+        Test that checking a non blacklisted email host correctly returns False.
         """
 
         self.assertFalse(is_email_host_blacklisted(self.not_blacklisted_host))
