@@ -17,7 +17,7 @@ class IPEntry(EntryBase):
     Model for IP entries in blacklist.
     """
 
-    entry_value = models.GenericIPAddressField()
+    entry_value = models.GenericIPAddressField(unique=True)
 
 
 class EmailEntry(EntryBase):
@@ -25,7 +25,7 @@ class EmailEntry(EntryBase):
     Model for email entries in blacklist.
     """
 
-    entry_value = models.EmailField()
+    entry_value = models.EmailField(unique=True)
 
 
 class EmailHostEntry(EntryBase):
@@ -33,4 +33,4 @@ class EmailHostEntry(EntryBase):
     Model for email host entries in blacklist.
     """
 
-    entry_value = models.CharField(max_length=254)
+    entry_value = models.CharField(max_length=254, unique=True)
