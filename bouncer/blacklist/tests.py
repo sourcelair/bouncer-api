@@ -138,6 +138,7 @@ class BrainTests(TestCase):
 
         self.assertFalse(is_email_host_blacklisted(self.not_blacklisted_host))
 
+
 class ModelTests(TestCase):
     @classmethod
     def setUpClass(cls):
