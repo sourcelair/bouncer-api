@@ -1,6 +1,10 @@
 from django.test import TestCase
 from blacklist import models
-from blacklist.brain import is_ip_blacklisted, is_email_blacklisted
+from blacklist.brain import (
+    is_ip_blacklisted,
+    is_email_blacklisted,
+    is_email_host_blacklisted,
+)
 
 
 class BrainTests(TestCase):
@@ -64,3 +68,19 @@ class BrainTests(TestCase):
         """
 
         self.assertFalse(is_email_blacklisted(f"a@{self.not_blacklisted_host}"))
+
+    def test_is_email_host_blacklisted_with_blacklisted_host(self):
+        """
+        is_email_host_blacklisted() returns True for hosts which are in
+        EmailHostEntry model.
+        """
+
+        self.assertTrue(is_email_host_blacklisted(self.blacklisted_host))
+
+    def test_is_email_host_blacklisted_with_not_blacklisted_host(self):
+        """
+        is_email_host_blacklisted() returns False for hosts which are not in
+        EmailHostEntry model.
+        """
+
+        self.assertFalse(is_email_host_blacklisted(self.not_blacklisted_host))
