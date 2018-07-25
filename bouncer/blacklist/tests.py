@@ -83,40 +83,40 @@ class ModelTests(TestCase):
         email_host_entry.save()
 
     def test_add_existing_ip_in_database(self):
-        '''
+        """
         Test that checking if correctly we cannot add an existing ip in our database.
-        '''
+        """
         pass
 
     def test_add_existing_ip_in_database_in_different_case(self):
-        '''
+        """
         Test that checking if correctly we cannot add an existing ip in our database,
         even if it has different case.
-        '''
+        """
         pass
 
     def test_add_existing_email_in_database(self):
-        '''
+        """
         Test that checking if correctly we cannot add an existing email in our database.
-        '''
+        """
         pass
 
     def test_add_existing_email_in_database_in_different_case(self):
-        '''
+        """
         Test that checking if correctly we cannot add an existing email in our database,
         even if it has different case.
-        '''
+        """
         pass
 
     def test_add_existing_email_host_in_database(self):
-        '''
+        """
         Test that checking if correctly we cannot add an existing email host in our database.
-        '''
+        """
         pass
 
     def test_add_existing_email_host_in_database_in_different_case(self):
-        '''
+        """
         Test that checking if correctly we cannot add an existing email host in our database,
         even if it has different case.
-        '''
+        """
         pass
