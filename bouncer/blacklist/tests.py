@@ -1,10 +1,12 @@
 from django.test import TestCase
 from blacklist import models
 from django.db.utils import IntegrityError
+from hashlib import sha256
 from blacklist.brain import (
     is_ip_blacklisted,
     is_email_blacklisted,
     is_email_host_blacklisted,
+    is_email_hash_blacklisted,
 )
 
 
@@ -138,6 +140,22 @@ class BrainTests(TestCase):
         """
 
         self.assertFalse(is_email_host_blacklisted(self.not_blacklisted_host))
+
+    def test_is_email_hash_blacklisted_with_blacklisted_hash(self):
+        """
+        Test that checking a blacklisted email hash correctly returns True.
+        """
+
+        hashed_email = sha256(self.lower_case_blacklisted_email.encode())
+        self.assertTrue(is_email_hash_blacklisted(hashed_email.hexdigest()))
+
+    def test_is_email_hash_blacklisted_with_not_blacklisted_hash(self):
+        """
+        Test that checking a non blacklisted email hash correctly returns False.
+        """
+
+        hashed_email = sha256(self.not_blacklisted_email.encode())
+        self.assertFalse(is_email_hash_blacklisted(hashed_email.hexdigest()))
 
 
 class ModelTests(TestCase):
