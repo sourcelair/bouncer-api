@@ -198,5 +198,7 @@ class ModelTests(TestCase):
         Test that checking if correctly we cannot add an existing email host in our database,
         even if it has different case.
         """
-        new_email_host_entry = models.EmailHostEntry(entry_value=self.email_host.upper())
+        new_email_host_entry = models.EmailHostEntry(
+            entry_value=self.email_host.upper()
+        )
         self.assertRaises(IntegrityError, lambda: new_email_host_entry.save())

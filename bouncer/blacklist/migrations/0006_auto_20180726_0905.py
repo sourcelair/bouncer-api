@@ -5,27 +5,27 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('blacklist', '0005_auto_20180726_0830'),
-    ]
+    dependencies = [("blacklist", "0005_auto_20180726_0830")]
 
     operations = [
         migrations.AlterField(
-            model_name='emailentry',
-            name='lower_case_entry_value',
-            field=models.EmailField(default='a@example.com', max_length=254, unique=True),
+            model_name="emailentry",
+            name="lower_case_entry_value",
+            field=models.EmailField(
+                default="a@example.com", max_length=254, unique=True
+            ),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='emailhostentry',
-            name='lower_case_entry_value',
-            field=models.CharField(default='example.com', max_length=254, unique=True),
+            model_name="emailhostentry",
+            name="lower_case_entry_value",
+            field=models.CharField(default="example.com", max_length=254, unique=True),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='ipentry',
-            name='lower_case_entry_value',
-            field=models.GenericIPAddressField(default='0.0.0.0', unique=True),
+            model_name="ipentry",
+            name="lower_case_entry_value",
+            field=models.GenericIPAddressField(default="0.0.0.0", unique=True),
             preserve_default=False,
         ),
     ]
