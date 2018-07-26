@@ -1,6 +1,7 @@
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from blacklist import models
+from hashlib import md5
 
 
 @receiver(pre_save, sender=models.IPEntry)
@@ -19,6 +20,9 @@ def email_entry_handler(sender, instance, **kwargs):
     """
 
     instance.lower_case_entry_value = instance.entry_value.lower()
+    instance.hashed_value = md5()
+    instance.hashed_value.update(instance.lower_case_entry_value.encode())
+    instance.hashed_value.hexdigest()
 
 
 @receiver(pre_save, sender=models.EmailHostEntry)

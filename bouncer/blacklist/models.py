@@ -31,6 +31,7 @@ class EmailEntry(EntryBase):
 
     entry_value = models.EmailField()
     lower_case_entry_value = models.EmailField(unique=True)
+    hashed_value = models.CharField(max_length=32)
 
     def __str__(self):
         return self.entry_value
