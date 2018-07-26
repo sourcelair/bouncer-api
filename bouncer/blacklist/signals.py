@@ -8,11 +8,12 @@ def ip_entry_handler(sender, instance, **kwargs):
     """
     Handler that assigns to lower_case_entry_value the entry_value.lower()
     """
+
     instance.lower_case_entry_value = instance.entry_value.lower()
 
 
 @receiver(pre_save, sender=models.EmailEntry)
-def ip_entry_handler(sender, instance, **kwargs):
+def email_entry_handler(sender, instance, **kwargs):
     """
     Handler that assigns to lower_case_entry_value the entry_value.lower()
     """
@@ -21,7 +22,7 @@ def ip_entry_handler(sender, instance, **kwargs):
 
 
 @receiver(pre_save, sender=models.EmailHostEntry)
-def ip_entry_handler(sender, instance, **kwargs):
+def email_host_entry_handler(sender, instance, **kwargs):
     """
     Handler that assigns to lower_case_entry_value the entry_value.lower()
     """
