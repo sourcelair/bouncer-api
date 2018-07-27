@@ -6,3 +6,4 @@ from blacklist import models
 class EntryAdmin(admin.ModelAdmin):
     fields = ["entry_value", "lower_case_entry_value", "reason"]
     search_fields = ["lower_case_entry_value", "entry_value"]
+    readonly_fields = ["lower_case_entry_value"]
