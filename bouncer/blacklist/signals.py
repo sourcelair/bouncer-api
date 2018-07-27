@@ -21,7 +21,7 @@ def email_entry_handler(sender, instance, **kwargs):
 
     instance.lower_case_entry_value = instance.entry_value.lower()
     email_hasher = sha256(instance.lower_case_entry_value.encode())
-    instance.hashed_value = hashed_email.hexdigest()
+    instance.hashed_value = email_hasher.hexdigest()
 
 
 @receiver(pre_save, sender=models.EmailHostEntry)
