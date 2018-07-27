@@ -2,4 +2,8 @@ from django.urls import path
 
 from . import views
 
-urlpatterns = [path("", views.index, name="index")]
+app_name = "blacklist"
+urlpatterns = [
+    path("", views.index, name="index"),
+    path("?ip=<str:ip>", views.ip_request, name="ip request"),
+]
