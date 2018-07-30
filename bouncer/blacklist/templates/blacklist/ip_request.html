@@ -1,3 +1,12 @@
-<h1>{{ ipentry.entry_value }}</h1>
-
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<table>
+    <tr>
+        <th>Kind</th>
+        <th>Value</th>
+        <th>Result</th>
+    </tr>
+    {% for r in request_list %}
+        {% cycle '<tr>' '' '' %}
+            <td>{{r}}</td>
+        {% cycle '' '' '</tr>' %}
+    {% endfor %}
+</table>
