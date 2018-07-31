@@ -4,4 +4,4 @@ from . import views
 
 app_name = "blacklist"
 
-urlpatterns = [path("", views.IPRequestView.as_view(), name="ip-request")]
+urlpatterns = [path("", views.RequestView.as_view(), name="request")]
