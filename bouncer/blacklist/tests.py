@@ -149,6 +149,16 @@ class BrainTests(TestCase):
         hashed_email = sha256(self.lower_case_blacklisted_email.encode())
         self.assertTrue(is_email_hash_blacklisted(hashed_email.hexdigest()))
 
+    def test_is_email_hash_blacklisted_with_upper_case_blacklisted_hash(self):
+        """
+        Test that checking a blacklisted email hash correctly returns True,
+        even if the query is in upper-case and the email hash is saved with lower case
+        in our database.
+        """
+
+        hashed_email = sha256(self.lower_case_blacklisted_email.encode())
+        self.assertTrue(is_email_hash_blacklisted(hashed_email.hexdigest().upper()))
+
     def test_is_email_hash_blacklisted_with_not_blacklisted_hash(self):
         """
         Test that checking a non blacklisted email hash correctly returns False.
