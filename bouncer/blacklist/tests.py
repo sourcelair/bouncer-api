@@ -1,5 +1,6 @@
 from django.test import TestCase
 from blacklist import models
+from django.urls import reverse
 from blacklist.brain import (
     is_ip_blacklisted,
     is_email_blacklisted,
@@ -137,3 +138,30 @@ class BrainTests(TestCase):
         """
 
         self.assertFalse(is_email_host_blacklisted(self.not_blacklisted_host))
+
+
+class IPRequestViewTests(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super(IPRequestViewTests, cls).setUpClass()
+        cls.blacklisted_ip = "2001:0:3238:dfe1:63::fefb"
+        cls.not_blacklisted_ip = "255.254.253.251"
+
+        ip_entry = models.IPEntry(entry_value=cls.blacklisted_ip)
+        ip_entry.save()
+
+    def test_blacklisted_ip(self):
+        """
+        Test that checking a blacklisted ip correctly returns 'YES'.
+        """
+
+        response = self.client.get("/blacklist/", {"ip": self.blacklisted_ip})
+        self.assertContains(response, "YES")
+
+    def test_blacklisted_ip(self):
+        """
+        Test that checking a non blacklisted ip correctly returns 'NO'.
+        """
+
+        response = self.client.get("/blacklist/", {"ip": self.not_blacklisted_ip})
+        self.assertContains(response, "NO")
