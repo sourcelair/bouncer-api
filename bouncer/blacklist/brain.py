@@ -37,6 +37,6 @@ def is_email_hash_blacklisted(email_hash):
     Checks if email hashed value is in EmailEntry model
     """
 
-    if models.EmailEntry.objects.filter(hashed_value=email_hash):
+    if models.EmailEntry.objects.filter(hashed_value=email_hash.lower()):
         return True
     return False
