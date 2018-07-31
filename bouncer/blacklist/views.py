@@ -10,7 +10,7 @@ from blacklist.brain import (
 )
 
 
-class IPRequestView(View):
+class RequestView(View):
     template = loader.get_template("blacklist/ip_request.html")
 
     def get(self, request, *args, **kwargs):
@@ -37,5 +37,4 @@ class IPRequestView(View):
             else:
                 context["request_list"].append("NO")
 
-        # print (context)
         return HttpResponse(self.template.render(context, request))
