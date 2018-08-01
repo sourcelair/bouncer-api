@@ -7,10 +7,10 @@ from blacklist.brain import (
 )
 
 
-class BrainTests(TestCase):
+class BaseTests(TestCase):
     @classmethod
     def setUpClass(cls):
-        super(BrainTests, cls).setUpClass()
+        super(BaseTests, cls).setUpClass()
         cls.lower_case_blacklisted_ip = "2001:0:3238:dfe1:63::fefb"
         cls.not_blacklisted_ip = "255.254.253.251"
         cls.lower_case_blacklisted_email = "a@spam.com"
@@ -25,6 +25,11 @@ class BrainTests(TestCase):
         host_entry = models.EmailHostEntry(entry_value=cls.lower_case_blacklisted_host)
         host_entry.save()
 
+    class Meta:
+        abstract = True
+
+
+class BrainTests(BaseTests):
     def test_is_ip_blacklisted_with_lower_case_blacklisted_ip_and_lower_case_query(
         self
     ):
@@ -137,3 +142,22 @@ class BrainTests(TestCase):
         """
 
         self.assertFalse(is_email_host_blacklisted(self.not_blacklisted_host))
+
+class IPRequestViewTests(BaseTests):
+    def test_blacklisted_ip(self):
+        """
+        Test that checking a blacklisted ip correctly returns 'YES'.
+        """
+
+        response = self.client.get(
+            "/blacklist/", {"ip": self.lower_case_blacklisted_ip}
+        )
+        self.assertContains(response, "YES")
+
+    def test_blacklisted_ip(self):
+        """
+        Test that checking a non blacklisted ip correctly returns 'NO'.
+        """
+
+        response = self.client.get("/blacklist/", {"ip": self.not_blacklisted_ip})
+        self.assertContains(response, "NO")
