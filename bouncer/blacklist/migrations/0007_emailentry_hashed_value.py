@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [("blacklist", "0006_auto_20180726_0905")]
+    dependencies = [("blacklist", "0002_auto_20180727_1042")]
 
     operations = [
         migrations.AddField(
