@@ -1,0 +1,14 @@
+<table>
+    <tr>
+        <th>Kind</th>
+        <th>Value</th>
+        <th>Result</th>
+    </tr>
+    {% for result in results %}
+        {% for item in result %}
+            {% cycle '<tr>' '' '' %}
+                <td>{{item}}</td>
+            {% cycle '' '' '</tr>' %}
+        {% endfor %}
+    {% endfor %}
+</table>
