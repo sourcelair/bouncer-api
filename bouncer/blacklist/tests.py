@@ -10,16 +10,17 @@ from blacklist.brain import (
 )
 
 
-class BrainTests(TestCase):
+class BaseTests(TestCase):
     @classmethod
     def setUpClass(cls):
-        super(BrainTests, cls).setUpClass()
+        super().setUpClass()
         cls.lower_case_blacklisted_ip = "2001:0:3238:dfe1:63::fefb"
         cls.not_blacklisted_ip = "255.254.253.251"
         cls.lower_case_blacklisted_email = "a@spam.com"
         cls.not_blacklisted_email = "a@test.com"
         cls.lower_case_blacklisted_host = "spam.com"
         cls.not_blacklisted_host = "test.com"
+        cls.upper_case_blacklisted_email = "B@SPAM.COM"
 
         ip_entry = models.IPEntry(entry_value=cls.lower_case_blacklisted_ip)
         ip_entry.save()
@@ -27,7 +28,16 @@ class BrainTests(TestCase):
         email_entry.save()
         host_entry = models.EmailHostEntry(entry_value=cls.lower_case_blacklisted_host)
         host_entry.save()
+        upper_case_email_entry = models.EmailEntry(
+            entry_value=cls.upper_case_blacklisted_email
+        )
+        upper_case_email_entry.save()
 
+    class Meta:
+        abstract = True
+
+
+class BrainTests(BaseTests):
     def test_is_ip_blacklisted_with_lower_case_blacklisted_ip_and_lower_case_query(
         self
     ):
@@ -168,30 +178,12 @@ class BrainTests(TestCase):
         self.assertFalse(is_email_hash_blacklisted(hashed_email.hexdigest()))
 
 
-class ModelTests(TestCase):
-    @classmethod
-    def setUpClass(cls):
-        super(ModelTests, cls).setUpClass()
-
-        cls.ip = "2001:0:3238:dfe1:63::fefc"
-        cls.email = "a@spam.com"
-        cls.email_host = "spam.com"
-        cls.upper_case_email = "B@SPAM.COM"
-
-        ip_entry = models.IPEntry(entry_value=cls.ip)
-        ip_entry.save()
-        email_entry = models.EmailEntry(entry_value=cls.email)
-        email_entry.save()
-        upper_case_email_entry = models.EmailEntry(entry_value=cls.upper_case_email)
-        upper_case_email_entry.save()
-        email_host_entry = models.EmailHostEntry(entry_value=cls.email_host)
-        email_host_entry.save()
-
+class ModelTests(BaseTests):
     def test_add_existing_ip_in_database(self):
         """
         Test that checking if correctly we cannot add an existing ip in our database.
         """
-        new_ip_entry = models.IPEntry(entry_value=self.ip)
+        new_ip_entry = models.IPEntry(entry_value=self.lower_case_blacklisted_ip)
         self.assertRaises(IntegrityError, lambda: new_ip_entry.save())
 
     def test_add_existing_ip_in_database_in_different_case(self):
@@ -199,14 +191,18 @@ class ModelTests(TestCase):
         Test that checking if correctly we cannot add an existing ip in our database,
         even if it has different case.
         """
-        new_ip_entry = models.IPEntry(entry_value=self.ip.upper())
+        new_ip_entry = models.IPEntry(
+            entry_value=self.lower_case_blacklisted_ip.upper()
+        )
         self.assertRaises(IntegrityError, lambda: new_ip_entry.save())
 
     def test_add_existing_email_in_database(self):
         """
         Test that checking if correctly we cannot add an existing email in our database.
         """
-        new_email_entry = models.EmailEntry(entry_value=self.email)
+        new_email_entry = models.EmailEntry(
+            entry_value=self.lower_case_blacklisted_email
+        )
         self.assertRaises(IntegrityError, lambda: new_email_entry.save())
 
     def test_add_existing_email_in_database_in_different_case(self):
@@ -214,14 +210,18 @@ class ModelTests(TestCase):
         Test that checking if correctly we cannot add an existing email in our database,
         even if it has different case.
         """
-        new_email_entry = models.EmailEntry(entry_value=self.email.upper())
+        new_email_entry = models.EmailEntry(
+            entry_value=self.lower_case_blacklisted_email.upper()
+        )
         self.assertRaises(IntegrityError, lambda: new_email_entry.save())
 
     def test_add_existing_email_host_in_database(self):
         """
         Test that checking if correctly we cannot add an existing email host in our database.
         """
-        new_email_host_entry = models.EmailHostEntry(entry_value=self.email_host)
+        new_email_host_entry = models.EmailHostEntry(
+            entry_value=self.lower_case_blacklisted_host
+        )
         self.assertRaises(IntegrityError, lambda: new_email_host_entry.save())
 
     def test_add_existing_email_host_in_database_in_different_case(self):
@@ -230,7 +230,7 @@ class ModelTests(TestCase):
         even if it has different case.
         """
         new_email_host_entry = models.EmailHostEntry(
-            entry_value=self.email_host.upper()
+            entry_value=self.lower_case_blacklisted_host.upper()
         )
         self.assertRaises(IntegrityError, lambda: new_email_host_entry.save())
 
@@ -243,7 +243,9 @@ class ModelTests(TestCase):
         )
         self.assertEqual(
             hashed_value,
-            models.EmailEntry.objects.get(entry_value=self.email).hashed_value,
+            models.EmailEntry.objects.get(
+                entry_value=self.lower_case_blacklisted_email
+            ).hashed_value,
         )
 
     def test_email_entry_get_sha256_hash(self):
@@ -256,6 +258,26 @@ class ModelTests(TestCase):
         self.assertEqual(
             hashed_email,
             models.EmailEntry.objects.get(
-                entry_value=self.upper_case_email
+                entry_value=self.upper_case_blacklisted_email
             ).hashed_value,
         )
+
+
+class IPRequestViewTests(BaseTests):
+    def test_blacklisted_ip(self):
+        """
+        Test that checking a blacklisted ip correctly returns 'YES'.
+        """
+
+        response = self.client.get(
+            "/blacklist/", {"ip": self.lower_case_blacklisted_ip}
+        )
+        self.assertContains(response, "YES")
+
+    def test_blacklisted_ip(self):
+        """
+        Test that checking a non blacklisted ip correctly returns 'NO'.
+        """
+
+        response = self.client.get("/blacklist/", {"ip": self.not_blacklisted_ip})
+        self.assertContains(response, "NO")
