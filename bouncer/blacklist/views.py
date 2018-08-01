@@ -16,31 +16,21 @@ class RequestView(View):
     def get(self, request, *args, **kwargs):
         context = {"results": []}
         if "email" in self.request.GET:
-            result = []
-            result.append("email")
-            result.append(self.request.GET["email"])
+            result = "NO"
             if is_email_blacklisted(self.request.GET["email"]):
-                result.append("YES")
-            else:
-                result.append("NO")
-            context["results"].append(result)
+                result = "YES"
+            context["results"].append(["email", self.request.GET["email"], result])
         if "email_host" in self.request.GET:
-            result = []
-            result.append("email_host")
-            result.append(self.request.GET["email_host"])
+            result = "NO"
             if is_email_host_blacklisted(self.request.GET["email_host"]):
-                result.append("YES")
-            else:
-                result.append("NO")
-            context["results"].append(result)
+                result = "YES"
+            context["results"].append(
+                ["email_host", self.request.GET["email_host"], result]
+            )
         if "ip" in self.request.GET:
-            result = []
-            result.append("ip")
-            result.append(self.request.GET["ip"])
+            result = "NO"
             if is_ip_blacklisted(self.request.GET["ip"]):
-                result.append("YES")
-            else:
-                result.append("NO")
-            context["results"].append(result)
+                result = "YES"
+            context["results"].append(["ip", self.request.GET["ip"], result])
 
         return HttpResponse(self.template.render(context, request))
