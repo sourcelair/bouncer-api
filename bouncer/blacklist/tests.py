@@ -234,24 +234,28 @@ class ModelTests(TestCase):
         )
         self.assertRaises(IntegrityError, lambda: new_email_host_entry.save())
 
-    def test_email_entry_get_SHA256_hash(self):
+    def test_email_entry_get_sha256_hash(self):
         """
         Test that checking if an email entry gets a known SHA256 hash after it is saved.
         """
-        email_hasher = sha256(self.email.encode())
-        self.assertTrue(
-            email_hasher.hexdigest()
-            == models.EmailEntry.objects.filter(entry_value=self.email)[0].hashed_value
+        hashed_email = (
+            "ecc15d6405217971226928ec750577080d259357e2d1399af9d81e1ecd368fda"
+        )
+        self.assertEqual(
+            hashed_value,
+            models.EmailEntry.objects.get(entry_value=self.email).hashed_value,
         )
 
-    def test_email_entry_get_SHA256_hash(self):
+    def test_email_entry_get_sha256_hash(self):
         """
         Test that checking if an email entry gets a known SHA256 hash after it is saved.
         """
-        email_hasher = sha256(self.upper_case_email.lower().encode())
-        self.assertTrue(
-            email_hasher.hexdigest()
-            == models.EmailEntry.objects.filter(entry_value=self.upper_case_email)[
-                0
-            ].hashed_value
+        hashed_email = (
+            "aa1bcdf211f4e1fc293095588042c1c7906d07de204143ba95797a270e469d97"
+        )
+        self.assertEqual(
+            hashed_email,
+            models.EmailEntry.objects.get(
+                entry_value=self.upper_case_email
+            ).hashed_value,
         )
