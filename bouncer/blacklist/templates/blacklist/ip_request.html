@@ -4,9 +4,11 @@
         <th>Value</th>
         <th>Result</th>
     </tr>
-    {% for r in request_list %}
-        {% cycle '<tr>' '' '' %}
-            <td>{{r}}</td>
-        {% cycle '' '' '</tr>' %}
+    {% for result in results %}
+        {% for item in result %}
+            {% cycle '<tr>' '' '' %}
+                <td>{{item}}</td>
+            {% cycle '' '' '</tr>' %}
+        {% endfor %}
     {% endfor %}
 </table>

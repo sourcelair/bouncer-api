@@ -14,27 +14,33 @@ class RequestView(View):
     template = loader.get_template("blacklist/ip_request.html")
 
     def get(self, request, *args, **kwargs):
-        context = {"request_list": []}
+        context = {"results": []}
         if "email" in self.request.GET:
-            context["request_list"].append("email")
-            context["request_list"].append(self.request.GET["email"])
+            result = []
+            result.append("email")
+            result.append(self.request.GET["email"])
             if is_email_blacklisted(self.request.GET["email"]):
-                context["request_list"].append("YES")
+                result.append("YES")
             else:
-                context["request_list"].append("NO")
+                result.append("NO")
+            context["results"].append(result)
         if "email_host" in self.request.GET:
-            context["request_list"].append("email_host")
-            context["request_list"].append(self.request.GET["email_host"])
+            result = []
+            result.append("email_host")
+            result.append(self.request.GET["email_host"])
             if is_email_host_blacklisted(self.request.GET["email_host"]):
-                context["request_list"].append("YES")
+                result.append("YES")
             else:
-                context["request_list"].append("NO")
+                result.append("NO")
+            context["results"].append(result)
         if "ip" in self.request.GET:
-            context["request_list"].append("ip")
-            context["request_list"].append(self.request.GET["ip"])
+            result = []
+            result.append("ip")
+            result.append(self.request.GET["ip"])
             if is_ip_blacklisted(self.request.GET["ip"]):
-                context["request_list"].append("YES")
+                result.append("YES")
             else:
-                context["request_list"].append("NO")
+                result.append("NO")
+            context["results"].append(result)
 
         return HttpResponse(self.template.render(context, request))
