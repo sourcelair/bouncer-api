@@ -1,10 +1,12 @@
 from django.test import TestCase
 from blacklist import models
 from django.db.utils import IntegrityError
+from hashlib import sha256
 from blacklist.brain import (
     is_ip_blacklisted,
     is_email_blacklisted,
     is_email_host_blacklisted,
+    is_email_hash_blacklisted,
 )
 
 
@@ -139,6 +141,32 @@ class BrainTests(TestCase):
 
         self.assertFalse(is_email_host_blacklisted(self.not_blacklisted_host))
 
+    def test_is_email_hash_blacklisted_with_blacklisted_hash(self):
+        """
+        Test that checking a blacklisted email hash correctly returns True.
+        """
+
+        hashed_email = sha256(self.lower_case_blacklisted_email.encode())
+        self.assertTrue(is_email_hash_blacklisted(hashed_email.hexdigest()))
+
+    def test_is_email_hash_blacklisted_with_upper_case_blacklisted_hash(self):
+        """
+        Test that checking a blacklisted email hash correctly returns True,
+        even if the query is in upper-case and the email hash is saved with lower case
+        in our database.
+        """
+
+        hashed_email = sha256(self.lower_case_blacklisted_email.encode())
+        self.assertTrue(is_email_hash_blacklisted(hashed_email.hexdigest().upper()))
+
+    def test_is_email_hash_blacklisted_with_not_blacklisted_hash(self):
+        """
+        Test that checking a non blacklisted email hash correctly returns False.
+        """
+
+        hashed_email = sha256(self.not_blacklisted_email.encode())
+        self.assertFalse(is_email_hash_blacklisted(hashed_email.hexdigest()))
+
 
 class ModelTests(TestCase):
     @classmethod
@@ -148,11 +176,14 @@ class ModelTests(TestCase):
         cls.ip = "2001:0:3238:dfe1:63::fefc"
         cls.email = "a@spam.com"
         cls.email_host = "spam.com"
+        cls.upper_case_email = "B@SPAM.COM"
 
         ip_entry = models.IPEntry(entry_value=cls.ip)
         ip_entry.save()
         email_entry = models.EmailEntry(entry_value=cls.email)
         email_entry.save()
+        upper_case_email_entry = models.EmailEntry(entry_value=cls.upper_case_email)
+        upper_case_email_entry.save()
         email_host_entry = models.EmailHostEntry(entry_value=cls.email_host)
         email_host_entry.save()
 
@@ -202,3 +233,29 @@ class ModelTests(TestCase):
             entry_value=self.email_host.upper()
         )
         self.assertRaises(IntegrityError, lambda: new_email_host_entry.save())
+
+    def test_email_entry_get_sha256_hash(self):
+        """
+        Test that checking if an email entry gets a known SHA256 hash after it is saved.
+        """
+        hashed_email = (
+            "ecc15d6405217971226928ec750577080d259357e2d1399af9d81e1ecd368fda"
+        )
+        self.assertEqual(
+            hashed_value,
+            models.EmailEntry.objects.get(entry_value=self.email).hashed_value,
+        )
+
+    def test_email_entry_get_sha256_hash(self):
+        """
+        Test that checking if an email entry gets a known SHA256 hash after it is saved.
+        """
+        hashed_email = (
+            "aa1bcdf211f4e1fc293095588042c1c7906d07de204143ba95797a270e469d97"
+        )
+        self.assertEqual(
+            hashed_email,
+            models.EmailEntry.objects.get(
+                entry_value=self.upper_case_email
+            ).hashed_value,
+        )
