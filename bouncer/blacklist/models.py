@@ -18,6 +18,10 @@ class IPEntry(EntryBase):
     """
 
     entry_value = models.GenericIPAddressField()
+    lower_case_entry_value = models.GenericIPAddressField(unique=True, editable=False)
+
+    def __str__(self):
+        return self.entry_value
 
 
 class EmailEntry(EntryBase):
@@ -26,6 +30,10 @@ class EmailEntry(EntryBase):
     """
 
     entry_value = models.EmailField()
+    lower_case_entry_value = models.EmailField(unique=True, editable=False)
+
+    def __str__(self):
+        return self.entry_value
 
 
 class EmailHostEntry(EntryBase):
@@ -34,3 +42,9 @@ class EmailHostEntry(EntryBase):
     """
 
     entry_value = models.CharField(max_length=254)
+    lower_case_entry_value = models.CharField(
+        max_length=254, unique=True, editable=False
+    )
+
+    def __str__(self):
+        return self.entry_value
