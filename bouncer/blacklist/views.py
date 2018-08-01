@@ -11,7 +11,7 @@ from blacklist.brain import (
 
 
 class RequestView(View):
-    template = loader.get_template("blacklist/ip_request.html")
+    template = loader.get_template("blacklist/request.html")
 
     def get(self, request, *args, **kwargs):
         query = dict(self.request.GET.lists())
