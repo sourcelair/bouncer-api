@@ -17,23 +17,27 @@ class RequestView(View):
     def get(self, request, *args, **kwargs):
         query = namedtuple("query", self.request.GET.keys())(**self.request.GET)
         context = {"results": []}
+        Row = namedtuple('Row', ['kind', 'value', 'result'])
         if "email" in self.request.GET:
             for email in query.email:
                 result = "NO"
                 if is_email_blacklisted(email):
                     result = "YES"
-                context["results"].append(["email", email, result])
+                row = Row('email', email, result)
+                context["results"].append(row)
         if "email_host" in self.request.GET:
             for host in query.email_host:
                 result = "NO"
                 if is_email_host_blacklisted(host):
                     result = "YES"
-                context["results"].append(["email_host", host, result])
+                row = Row('email_host', host, result)
+                context["results"].append(row)
         if "ip" in self.request.GET:
             for ip in query.ip:
                 result = "NO"
                 if is_ip_blacklisted(ip):
                     result = "YES"
-                context["results"].append(["ip", ip, result])
+                row = Row('ip', ip, result)
+                context["results"].append(row)
 
         return HttpResponse(self.template.render(context, request))
