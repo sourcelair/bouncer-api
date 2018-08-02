@@ -263,7 +263,7 @@ class ModelTests(BaseTests):
         )
 
 
-class IPRequestViewTests(BaseTests):
+class RequestViewTests(BaseTests):
     def test_blacklisted_ip(self):
         """
         Test that checking a blacklisted ip correctly returns 'YES'.
@@ -272,12 +272,136 @@ class IPRequestViewTests(BaseTests):
         response = self.client.get(
             "/blacklist/", {"ip": self.lower_case_blacklisted_ip}
         )
-        self.assertContains(response, "YES")
+        self.assertContains(
+            response,
+            f"<tr><td>ip</td><td>{self.lower_case_blacklisted_ip}</td><td>YES</td></tr>",
+            html=True,
+        )
 
-    def test_blacklisted_ip(self):
+    def test_non_blacklisted_ip(self):
         """
         Test that checking a non blacklisted ip correctly returns 'NO'.
         """
 
         response = self.client.get("/blacklist/", {"ip": self.not_blacklisted_ip})
-        self.assertContains(response, "NO")
+        self.assertContains(
+            response,
+            f"<tr><td>ip</td><td>{self.not_blacklisted_ip}</td><td>NO</td></tr>",
+            html=True,
+        )
+
+    def test_blacklisted_email(self):
+        """
+        Test that checking a blacklisted email correctly returns 'YES'.
+        """
+
+        response = self.client.get(
+            "/blacklist/", {"email": self.lower_case_blacklisted_email}
+        )
+        self.assertContains(
+            response,
+            f"<tr><td>email</td><td>{self.lower_case_blacklisted_email}</td><td>YES</td></tr>",
+            html=True,
+        )
+
+    def test_non_blacklisted_email(self):
+        """
+        Test that checking a non blacklisted email correctly returns 'NO'.
+        """
+
+        response = self.client.get("/blacklist/", {"email": self.not_blacklisted_email})
+        self.assertContains(
+            response,
+            f"<tr><td>email</td><td>{self.not_blacklisted_email}</td><td>NO</td></tr>",
+            html=True,
+        )
+
+    def test_blacklisted_email_host(self):
+        """
+        Test that checking a blacklisted email host correctly returns 'YES'.
+        """
+
+        response = self.client.get(
+            "/blacklist/", {"email_host": self.lower_case_blacklisted_host}
+        )
+        self.assertContains(
+            response,
+            f"<tr><td>email_host</td><td>{self.lower_case_blacklisted_host}</td><td>YES</td></tr>",
+            html=True,
+        )
+
+    def test_non_blacklisted_email_host(self):
+        """
+        Test that checking a non blacklisted email host correctly returns 'NO'.
+        """
+
+        response = self.client.get(
+            "/blacklist/", {"email_host": self.not_blacklisted_host}
+        )
+        self.assertContains(
+            response,
+            f"<tr><td>email_host</td><td>{self.not_blacklisted_host}</td><td>NO</td></tr>",
+            html=True,
+        )
+
+    def test_two_ips_queries(self):
+        """
+        Test that checking two ip queries return correctly.
+        """
+        response = self.client.get(
+            "/blacklist/",
+            {"ip": [self.lower_case_blacklisted_ip, self.not_blacklisted_ip]},
+        )
+        self.assertContains(
+            response,
+            f"<tr><td>ip</td><td>{self.not_blacklisted_ip}</td><td>NO</td></tr>",
+            html=True,
+        )
+        self.assertContains(
+            response,
+            f"<tr><td>ip</td><td>{self.lower_case_blacklisted_ip}</td><td>YES</td></tr>",
+            html=True,
+        )
+
+    def test_two_emails_queries(self):
+        """
+        Test that checking two email queries return correctly.
+        """
+        response = self.client.get(
+            "/blacklist/",
+            {"email": [self.lower_case_blacklisted_email, self.not_blacklisted_email]},
+        )
+        self.assertContains(
+            response,
+            f"<tr><td>email</td><td>{self.not_blacklisted_email}</td><td>NO</td></tr>",
+            html=True,
+        )
+        self.assertContains(
+            response,
+            f"<tr><td>email</td><td>{self.lower_case_blacklisted_email}</td><td>YES</td></tr>",
+            html=True,
+        )
+
+    def test_two_email_hosts_queries(self):
+        """
+        Test that checking two email host queries return correctly.
+        """
+        response = self.client.get(
+            "/blacklist/",
+            {
+                "email_host": [
+                    self.lower_case_blacklisted_host,
+                    self.not_blacklisted_host,
+                ]
+            },
+        )
+        self.assertContains(
+            response,
+            f"<tr><td>email_host</td><td>{self.not_blacklisted_host}</td><td>NO</td></tr>",
+            html=True,
+        )
+        self.assertContains(
+            response,
+            f"<tr><td>email_host</td><td>{self.lower_case_blacklisted_host}</td><td>YES</td></tr>",
+            html=True,
+        )

@@ -1,0 +1,14 @@
+<table>
+    <tr>
+        <th>Kind</th>
+        <th>Value</th>
+        <th>Result</th>
+    </tr>
+    {% for row in results %}
+        <tr>
+            <td>{{row.kind}}</td>
+            <td>{{row.value}}</td>
+            <td>{{row.result}}</td>
+        </tr>
+    {% endfor %}
+</table>
