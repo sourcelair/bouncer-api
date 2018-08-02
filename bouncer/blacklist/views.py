@@ -18,25 +18,22 @@ class RequestView(View):
         query = namedtuple("query", self.request.GET.keys())(**self.request.GET)
         context = {"results": []}
         if "email" in self.request.GET:
-            while query.email != []:
+            for email in query.email:
                 result = "NO"
-                if is_email_blacklisted(query.email[0]):
+                if is_email_blacklisted(email):
                     result = "YES"
-                context["results"].append(["email", query.email[0], result])
-                query.email.remove(query.email[0])
+                context["results"].append(["email", email, result])
         if "email_host" in self.request.GET:
-            while query.email_host != []:
+            for host in query.email_host:
                 result = "NO"
-                if is_email_host_blacklisted(query.email_host[0]):
+                if is_email_host_blacklisted(host):
                     result = "YES"
-                context["results"].append(["email_host", query.email_host[0], result])
-                query.email_host.remove(query.email_host[0])
+                context["results"].append(["email_host", host, result])
         if "ip" in self.request.GET:
-            while query.ip != []:
+            for ip in query.ip:
                 result = "NO"
-                if is_ip_blacklisted(query.ip[0]):
+                if is_ip_blacklisted(ip):
                     result = "YES"
-                context["results"].append(["ip", query.ip[0], result])
-                query.ip.remove(query.ip[0])
+                context["results"].append(["ip", ip, result])
 
         return HttpResponse(self.template.render(context, request))
