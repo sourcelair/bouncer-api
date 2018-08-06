@@ -8,11 +8,6 @@ class SingleResponseSerializer(serializers.Serializer):
     result = serializers.BooleanField()
 
 
-"""
-class ResponseListSerializer(serializers.Serializer):
-    responses = ResponseSerializer(many=True)"""
-
-
 class ResponseSerializer(serializers.Serializer):
     response_list = serializers.ListField(
         child=serializers.DictField(child=SingleResponseSerializer())
