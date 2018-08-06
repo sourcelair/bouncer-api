@@ -11,3 +11,4 @@ black = "==18.6b4"
 
 [packages]
 django = "*"
+djangorestframework = "*"
