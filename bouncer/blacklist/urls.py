@@ -4,7 +4,4 @@ from blacklist import views
 
 app_name = "blacklist"
 
-router = routers.DefaultRouter()
-router.register("", views.RequestView, base_name="request")
-
-urlpatterns = [path("", include(router.urls))]
+urlpatterns = [path("", views.RequestView.as_view(), name="request")]
