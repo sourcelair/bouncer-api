@@ -1,7 +1,6 @@
 from django.test import TestCase
 from blacklist import models
 from django.db.utils import IntegrityError
-from rest_framework.response import Response
 from hashlib import sha256
 from blacklist.brain import (
     is_ip_blacklisted,
