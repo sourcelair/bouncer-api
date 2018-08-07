@@ -267,7 +267,7 @@ class ModelTests(BaseTests):
 class RequestViewTests(BaseTests):
     def test_blacklisted_ip(self):
         """
-        Test that checking a blacklisted ip correctly returns 'YES'.
+        Test that checking a blacklisted ip correctly returns True.
         """
 
         correct_response = [
@@ -280,7 +280,7 @@ class RequestViewTests(BaseTests):
 
     def test_non_blacklisted_ip(self):
         """
-        Test that checking a non blacklisted ip correctly returns 'NO'.
+        Test that checking a non blacklisted ip correctly returns False.
         """
         correct_response = [
             {"kind": "ip", "value": self.not_blacklisted_ip, "result": False}
@@ -290,7 +290,7 @@ class RequestViewTests(BaseTests):
 
     def test_blacklisted_email(self):
         """
-        Test that checking a blacklisted email correctly returns 'YES'.
+        Test that checking a blacklisted email correctly returns True.
         """
         correct_response = [
             {
@@ -306,7 +306,7 @@ class RequestViewTests(BaseTests):
 
     def test_non_blacklisted_email(self):
         """
-        Test that checking a non blacklisted email correctly returns 'NO'.
+        Test that checking a non blacklisted email correctly returns False.
         """
         correct_response = [
             {"kind": "email", "value": self.not_blacklisted_email, "result": False}
@@ -316,7 +316,7 @@ class RequestViewTests(BaseTests):
 
     def test_blacklisted_email_host(self):
         """
-        Test that checking a blacklisted email host correctly returns 'YES'.
+        Test that checking a blacklisted email host correctly returns True.
         """
         correct_response = [
             {
@@ -332,7 +332,7 @@ class RequestViewTests(BaseTests):
 
     def test_non_blacklisted_email_host(self):
         """
-        Test that checking a non blacklisted email host correctly returns 'NO'.
+        Test that checking a non blacklisted email host correctly returns False.
         """
         correct_response = [
             {"kind": "email_host", "value": self.not_blacklisted_host, "result": False}
