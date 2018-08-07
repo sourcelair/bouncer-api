@@ -1,6 +1,7 @@
 from django.test import TestCase
 from blacklist import models
 from django.db.utils import IntegrityError
+from rest_framework.response import Response
 from hashlib import sha256
 from blacklist.brain import (
     is_ip_blacklisted,
@@ -269,123 +270,122 @@ class RequestViewTests(BaseTests):
         Test that checking a blacklisted ip correctly returns 'YES'.
         """
 
+        correct_response = [
+            {"kind": "ip", "value": self.lower_case_blacklisted_ip, "result": True}
+        ]
         response = self.client.get(
             "/blacklist/", {"ip": self.lower_case_blacklisted_ip}
         )
-        self.assertContains(
-            response,
-            f"<tr><td>ip</td><td>{self.lower_case_blacklisted_ip}</td><td>YES</td></tr>",
-            html=True,
-        )
+        self.assertEqual(response.data, correct_response)
 
     def test_non_blacklisted_ip(self):
         """
         Test that checking a non blacklisted ip correctly returns 'NO'.
         """
-
+        correct_response = [
+            {"kind": "ip", "value": self.not_blacklisted_ip, "result": False}
+        ]
         response = self.client.get("/blacklist/", {"ip": self.not_blacklisted_ip})
-        self.assertContains(
-            response,
-            f"<tr><td>ip</td><td>{self.not_blacklisted_ip}</td><td>NO</td></tr>",
-            html=True,
-        )
+        self.assertEqual(response.data, correct_response)
 
     def test_blacklisted_email(self):
         """
         Test that checking a blacklisted email correctly returns 'YES'.
         """
-
+        correct_response = [
+            {
+                "kind": "email",
+                "value": self.lower_case_blacklisted_email,
+                "result": True,
+            }
+        ]
         response = self.client.get(
             "/blacklist/", {"email": self.lower_case_blacklisted_email}
         )
-        self.assertContains(
-            response,
-            f"<tr><td>email</td><td>{self.lower_case_blacklisted_email}</td><td>YES</td></tr>",
-            html=True,
-        )
+        self.assertEqual(response.data, correct_response)
 
     def test_non_blacklisted_email(self):
         """
         Test that checking a non blacklisted email correctly returns 'NO'.
         """
-
+        correct_response = [
+            {"kind": "email", "value": self.not_blacklisted_email, "result": False}
+        ]
         response = self.client.get("/blacklist/", {"email": self.not_blacklisted_email})
-        self.assertContains(
-            response,
-            f"<tr><td>email</td><td>{self.not_blacklisted_email}</td><td>NO</td></tr>",
-            html=True,
-        )
+        self.assertEqual(response.data, correct_response)
 
     def test_blacklisted_email_host(self):
         """
         Test that checking a blacklisted email host correctly returns 'YES'.
         """
-
+        correct_response = [
+            {
+                "kind": "email_host",
+                "value": self.lower_case_blacklisted_host,
+                "result": True,
+            }
+        ]
         response = self.client.get(
             "/blacklist/", {"email_host": self.lower_case_blacklisted_host}
         )
-        self.assertContains(
-            response,
-            f"<tr><td>email_host</td><td>{self.lower_case_blacklisted_host}</td><td>YES</td></tr>",
-            html=True,
-        )
+        self.assertEqual(response.data, correct_response)
 
     def test_non_blacklisted_email_host(self):
         """
         Test that checking a non blacklisted email host correctly returns 'NO'.
         """
-
+        correct_response = [
+            {"kind": "email_host", "value": self.not_blacklisted_host, "result": False}
+        ]
         response = self.client.get(
             "/blacklist/", {"email_host": self.not_blacklisted_host}
         )
-        self.assertContains(
-            response,
-            f"<tr><td>email_host</td><td>{self.not_blacklisted_host}</td><td>NO</td></tr>",
-            html=True,
-        )
+        self.assertEqual(response.data, correct_response)
 
     def test_two_ips_queries(self):
         """
         Test that checking two ip queries return correctly.
         """
+        correct_response = [
+            {"kind": "ip", "value": self.lower_case_blacklisted_ip, "result": True},
+            {"kind": "ip", "value": self.not_blacklisted_ip, "result": False},
+        ]
         response = self.client.get(
             "/blacklist/",
             {"ip": [self.lower_case_blacklisted_ip, self.not_blacklisted_ip]},
         )
-        self.assertContains(
-            response,
-            f"<tr><td>ip</td><td>{self.not_blacklisted_ip}</td><td>NO</td></tr>",
-            html=True,
-        )
-        self.assertContains(
-            response,
-            f"<tr><td>ip</td><td>{self.lower_case_blacklisted_ip}</td><td>YES</td></tr>",
-            html=True,
-        )
+        self.assertEqual(response.data, correct_response)
 
     def test_two_emails_queries(self):
         """
         Test that checking two email queries return correctly.
         """
+        correct_response = [
+            {
+                "kind": "email",
+                "value": self.lower_case_blacklisted_email,
+                "result": True,
+            },
+            {"kind": "email", "value": self.not_blacklisted_email, "result": False},
+        ]
         response = self.client.get(
             "/blacklist/",
             {"email": [self.lower_case_blacklisted_email, self.not_blacklisted_email]},
         )
-        self.assertContains(
-            response,
-            f"<tr><td>email</td><td>{self.not_blacklisted_email}</td><td>NO</td></tr>",
-            html=True,
-        )
-        self.assertContains(
-            response,
-            f"<tr><td>email</td><td>{self.lower_case_blacklisted_email}</td><td>YES</td></tr>",
-            html=True,
-        )
+        self.assertEqual(response.data, correct_response)
 
     def test_two_email_hosts_queries(self):
         """
         Test that checking two email host queries return correctly.
         """
+        correct_response = [
+            {
+                "kind": "email_host",
+                "value": self.lower_case_blacklisted_host,
+                "result": True,
+            },
+            {"kind": "email_host", "value": self.not_blacklisted_host, "result": False},
+        ]
         response = self.client.get(
             "/blacklist/",
             {
@@ -395,13 +395,4 @@ class RequestViewTests(BaseTests):
                 ]
             },
         )
-        self.assertContains(
-            response,
-            f"<tr><td>email_host</td><td>{self.not_blacklisted_host}</td><td>NO</td></tr>",
-            html=True,
-        )
-        self.assertContains(
-            response,
-            f"<tr><td>email_host</td><td>{self.lower_case_blacklisted_host}</td><td>YES</td></tr>",
-            html=True,
-        )
+        self.assertEqual(response.data, correct_response)
