@@ -27,6 +27,3 @@ class RequestView(views.APIView):
             response = {"kind": "ip", "value": ip, "result": result}
             result_list.append(response)
         return Response(result_list)
-
-    def get_extra_actions(cls):
-        return []
