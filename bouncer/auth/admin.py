@@ -1,3 +1,9 @@
 from django.contrib import admin
+from auth import models
 
-# Register your models here.
+
+@admin.register(models.UserToken)
+class UserTokenAdmin(admin.ModelAdmin):
+    fields = ["user", "key"]
+    search_fields = ["user", "key"]
+    readonly_fields = ["key"]
