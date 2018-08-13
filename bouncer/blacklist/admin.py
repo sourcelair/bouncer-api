@@ -13,7 +13,3 @@ class EmailEntryAdmin(admin.ModelAdmin):
     fields = ["entry_value", "hashed_value", "reason"]
     search_fields = ["entry_value", "hashed_value"]
     readonly_fields = ["hashed_value"]
-
-@admin.register(models.UserToken)
-class UserTokenAdmin(admin.ModelAdmin):
-    fields = ["name"]

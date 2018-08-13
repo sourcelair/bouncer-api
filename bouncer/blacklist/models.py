@@ -1,5 +1,4 @@
 from django.db import models
-from rest_framework.authtoken.models import Token
 
 
 class EntryBase(models.Model):
@@ -50,11 +49,3 @@ class EmailHostEntry(EntryBase):
 
     def __str__(self):
         return self.entry_value
-
-class UserToken(Token):
-    '''
-    Model for user authentication tokens.
-    '''
-
-    name = models.CharField(max_length=254)
-    #value
