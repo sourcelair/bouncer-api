@@ -1,5 +1,5 @@
 from django.contrib import admin
-from auth import models
+from authentication import models
 
 
 @admin.register(models.UserToken)
