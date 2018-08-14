@@ -1,8 +1,5 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.views import View
-from django.template import loader
-from blacklist import models
+from rest_framework.response import Response
+from rest_framework import views
 from collections import namedtuple
 from blacklist.brain import (
     is_ip_blacklisted,
@@ -11,32 +8,22 @@ from blacklist.brain import (
 )
 
 
-class RequestView(View):
-    template = loader.get_template("blacklist/request.html")
-
-    def get(self, request, *args, **kwargs):
-        context = {"results": []}
-        Row = namedtuple("Row", ["kind", "value", "result"])
-        email_query = self.request.GET.getlist("email")
+class RequestView(views.APIView):
+    def get(self, request):
+        result_list = []
+        email_query = request.GET.getlist("email")
         for email in email_query:
-            result = "NO"
-            if is_email_blacklisted(email):
-                result = "YES"
-            row = Row("email", email, result)
-            context["results"].append(row)
+            result = is_email_blacklisted(email)
+            response = {"kind": "email", "value": email, "result": result}
+            result_list.append(response)
         host_query = self.request.GET.getlist("email_host")
         for host in host_query:
-            result = "NO"
-            if is_email_host_blacklisted(host):
-                result = "YES"
-            row = Row("email_host", host, result)
-            context["results"].append(row)
+            result = is_email_host_blacklisted(host)
+            response = {"kind": "email_host", "value": host, "result": result}
+            result_list.append(response)
         ip_query = self.request.GET.getlist("ip")
         for ip in ip_query:
-            result = "NO"
-            if is_ip_blacklisted(ip):
-                result = "YES"
-            row = Row("ip", ip, result)
-            context["results"].append(row)
-
-        return HttpResponse(self.template.render(context, request))
+            result = is_ip_blacklisted(ip)
+            response = {"kind": "ip", "value": ip, "result": result}
+            result_list.append(response)
+        return Response(result_list)
