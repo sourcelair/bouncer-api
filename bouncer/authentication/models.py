@@ -6,27 +6,27 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from blacklist.models import EmailEntry
+from django.utils.crypto import get_random_string
 
 
 class AuthToken(models.Model):
-    key = models.CharField(_("Key"), max_length=40, primary_key=True)
+    key = models.CharField(_("Key"), max_length=32, primary_key=True)
     user = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name="auth_token", verbose_name=_("User")
     )
-    created = models.DateTimeField(_("Created"), auto_now_add=True)
+    created_at = models.DateTimeField(_("Created"), auto_now_add=True)
 
     class Meta:
-        verbose_name = _("UserToken")
-        verbose_name_plural = _("UserTokens")
-        permissions = (("can_view_email_entry", "Can view email entries"),)
+        verbose_name = _("AuthToken")
+        verbose_name_plural = _("AuthTokens")
 
     def save(self, *args, **kwargs):
         if not self.key:
             self.key = self.generate_key()
-        return super(UserToken, self).save(*args, **kwargs)
+        return super(AuthToken, self).save(*args, **kwargs)
 
     def generate_key(self):
-        return binascii.hexlify(os.urandom(20)).decode()
+        return get_random_string(length=32)
 
     def __str__(self):
         return self.key
