@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from blacklist.models import EmailEntry
 
 
-class UserToken(models.Model):
+class AuthToken(models.Model):
     key = models.CharField(_("Key"), max_length=40, primary_key=True)
     user = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name="auth_token", verbose_name=_("User")
