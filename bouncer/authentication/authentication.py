@@ -6,7 +6,7 @@ from authentication import models
 
 class Authentication(authentication.TokenAuthentication):
     def authenticate(self, request):
-        auth = get_authorization_header(request).split()
+        auth = authentication.get_authorization_header(request).split()
 
         if not auth or auth[0].lower() != self.keyword.lower().encode():
             return None
