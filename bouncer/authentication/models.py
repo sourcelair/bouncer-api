@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+from blacklist.models import EmailEntry
 
 
 class UserToken(models.Model):
@@ -17,6 +18,7 @@ class UserToken(models.Model):
     class Meta:
         verbose_name = _("UserToken")
         verbose_name_plural = _("UserTokens")
+        permissions = (("can_view_email_entry", "Can view email entries"),)
 
     def save(self, *args, **kwargs):
         if not self.key:
