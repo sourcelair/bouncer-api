@@ -10,7 +10,7 @@ from django.utils.crypto import get_random_string
 
 
 class AuthToken(models.Model):
-    key = models.CharField(_("Key"), max_length=32, primary_key=True)
+    key = models.CharField(_("Key"), max_length=32, primary_key=True, editable=False)
     user = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name="auth_token", verbose_name=_("User")
     )

@@ -6,4 +6,3 @@ from authentication import models
 class AuthTokenAdmin(admin.ModelAdmin):
     fields = ["user", "key"]
     search_fields = ["user", "key"]
-    readonly_fields = ["key"]
