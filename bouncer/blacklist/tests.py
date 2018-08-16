@@ -407,3 +407,17 @@ class RequestViewTests(BaseTests):
             },
         )
         self.assertEqual(response.data, correct_response)
+
+    def test_query_with_unauthenticated_client(self):
+        """
+        Test that checking a query correctly returns status code 401.
+        """
+        response = self.unauthenticated_client.get(
+            "/blacklist/",
+            {
+                "ip": self.lower_case_blacklisted_ip,
+                "email": self.lower_case_blacklisted_email,
+                "email_host": self.lower_case_blacklisted_host,
+            },
+        )
+        self.assertEqual(response.status_code, 401)
