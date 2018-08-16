@@ -2,6 +2,9 @@ from django.test import TestCase
 from blacklist import models
 from django.db.utils import IntegrityError
 from hashlib import sha256
+from rest_framework.test import APIClient
+from authentication.models import AuthToken
+from django.contrib.auth.models import User
 from blacklist.brain import (
     is_ip_blacklisted,
     is_email_blacklisted,
@@ -32,6 +35,16 @@ class BaseTests(TestCase):
             entry_value=cls.upper_case_blacklisted_email
         )
         upper_case_email_entry.save()
+
+        user = User(username='example_user')
+        user.save()
+        user = User.objects.get(username='example_user')
+        user_token = AuthToken(user=user)
+        user_token.save()
+        token = AuthToken.objects.get(user__username='example_user')
+        cls.authenticated_client = APIClient()
+        cls.authenticated_client.force_authenticate(user=user)
+        cls.unauthenticated_client = APIClient()
 
     class Meta:
         abstract = True
@@ -272,7 +285,7 @@ class RequestViewTests(BaseTests):
         correct_response = [
             {"kind": "ip", "value": self.lower_case_blacklisted_ip, "result": True}
         ]
-        response = self.client.get(
+        response = self.authenticated_client.get(
             "/blacklist/", {"ip": self.lower_case_blacklisted_ip}
         )
         self.assertEqual(response.data, correct_response)
@@ -284,7 +297,9 @@ class RequestViewTests(BaseTests):
         correct_response = [
             {"kind": "ip", "value": self.not_blacklisted_ip, "result": False}
         ]
-        response = self.client.get("/blacklist/", {"ip": self.not_blacklisted_ip})
+        response = self.authenticated_client.get(
+            "/blacklist/", {"ip": self.not_blacklisted_ip}
+        )
         self.assertEqual(response.data, correct_response)
 
     def test_blacklisted_email(self):
@@ -298,7 +313,7 @@ class RequestViewTests(BaseTests):
                 "result": True,
             }
         ]
-        response = self.client.get(
+        response = self.authenticated_client.get(
             "/blacklist/", {"email": self.lower_case_blacklisted_email}
         )
         self.assertEqual(response.data, correct_response)
@@ -310,7 +325,9 @@ class RequestViewTests(BaseTests):
         correct_response = [
             {"kind": "email", "value": self.not_blacklisted_email, "result": False}
         ]
-        response = self.client.get("/blacklist/", {"email": self.not_blacklisted_email})
+        response = self.authenticated_client.get(
+            "/blacklist/", {"email": self.not_blacklisted_email}
+        )
         self.assertEqual(response.data, correct_response)
 
     def test_blacklisted_email_host(self):
@@ -324,7 +341,7 @@ class RequestViewTests(BaseTests):
                 "result": True,
             }
         ]
-        response = self.client.get(
+        response = self.authenticated_client.get(
             "/blacklist/", {"email_host": self.lower_case_blacklisted_host}
         )
         self.assertEqual(response.data, correct_response)
@@ -336,7 +353,7 @@ class RequestViewTests(BaseTests):
         correct_response = [
             {"kind": "email_host", "value": self.not_blacklisted_host, "result": False}
         ]
-        response = self.client.get(
+        response = self.authenticated_client.get(
             "/blacklist/", {"email_host": self.not_blacklisted_host}
         )
         self.assertEqual(response.data, correct_response)
@@ -349,7 +366,7 @@ class RequestViewTests(BaseTests):
             {"kind": "ip", "value": self.lower_case_blacklisted_ip, "result": True},
             {"kind": "ip", "value": self.not_blacklisted_ip, "result": False},
         ]
-        response = self.client.get(
+        response = self.authenticated_client.get(
             "/blacklist/",
             {"ip": [self.lower_case_blacklisted_ip, self.not_blacklisted_ip]},
         )
@@ -367,7 +384,7 @@ class RequestViewTests(BaseTests):
             },
             {"kind": "email", "value": self.not_blacklisted_email, "result": False},
         ]
-        response = self.client.get(
+        response = self.authenticated_client.get(
             "/blacklist/",
             {"email": [self.lower_case_blacklisted_email, self.not_blacklisted_email]},
         )
@@ -385,7 +402,7 @@ class RequestViewTests(BaseTests):
             },
             {"kind": "email_host", "value": self.not_blacklisted_host, "result": False},
         ]
-        response = self.client.get(
+        response = self.authenticated_client.get(
             "/blacklist/",
             {
                 "email_host": [
