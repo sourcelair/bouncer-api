@@ -36,7 +36,7 @@ class BaseTests(TestCase):
         )
         upper_case_email_entry.save()
 
-        user = User(username='example_user')
+        user = User(username="example_user")
         cls.authenticated_client = APIClient()
         cls.authenticated_client.force_authenticate(user=user)
         cls.unauthenticated_client = APIClient()
@@ -272,7 +272,7 @@ class ModelTests(BaseTests):
 
 
 class RequestViewTests(BaseTests):
-    def test_blacklisted_ip(self):
+    def test_blacklisted_ip_with_authenticated_client(self):
         """
         Test that checking a blacklisted ip correctly returns True.
         """
@@ -285,7 +285,7 @@ class RequestViewTests(BaseTests):
         )
         self.assertEqual(response.data, correct_response)
 
-    def test_non_blacklisted_ip(self):
+    def test_non_blacklisted_ip_with_authenticated_client(self):
         """
         Test that checking a non blacklisted ip correctly returns False.
         """
@@ -297,7 +297,7 @@ class RequestViewTests(BaseTests):
         )
         self.assertEqual(response.data, correct_response)
 
-    def test_blacklisted_email(self):
+    def test_blacklisted_email_with_authenticated_client(self):
         """
         Test that checking a blacklisted email correctly returns True.
         """
@@ -313,7 +313,7 @@ class RequestViewTests(BaseTests):
         )
         self.assertEqual(response.data, correct_response)
 
-    def test_non_blacklisted_email(self):
+    def test_non_blacklisted_email_with_authenticated_client(self):
         """
         Test that checking a non blacklisted email correctly returns False.
         """
@@ -325,7 +325,7 @@ class RequestViewTests(BaseTests):
         )
         self.assertEqual(response.data, correct_response)
 
-    def test_blacklisted_email_host(self):
+    def test_blacklisted_email_host_with_authenticated_client(self):
         """
         Test that checking a blacklisted email host correctly returns True.
         """
@@ -341,7 +341,7 @@ class RequestViewTests(BaseTests):
         )
         self.assertEqual(response.data, correct_response)
 
-    def test_non_blacklisted_email_host(self):
+    def test_non_blacklisted_email_host_with_authenticated_client(self):
         """
         Test that checking a non blacklisted email host correctly returns False.
         """
@@ -353,7 +353,7 @@ class RequestViewTests(BaseTests):
         )
         self.assertEqual(response.data, correct_response)
 
-    def test_two_ips_queries(self):
+    def test_two_ips_queries_with_authenticated_client(self):
         """
         Test that checking two ip queries return correctly.
         """
@@ -367,7 +367,7 @@ class RequestViewTests(BaseTests):
         )
         self.assertEqual(response.data, correct_response)
 
-    def test_two_emails_queries(self):
+    def test_two_emails_queries_with_authenticated_client(self):
         """
         Test that checking two email queries return correctly.
         """
@@ -385,7 +385,7 @@ class RequestViewTests(BaseTests):
         )
         self.assertEqual(response.data, correct_response)
 
-    def test_two_email_hosts_queries(self):
+    def test_two_email_hosts_queries_with_authenticated_client(self):
         """
         Test that checking two email host queries return correctly.
         """
