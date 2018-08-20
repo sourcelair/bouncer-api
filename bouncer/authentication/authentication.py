@@ -13,6 +13,3 @@ class Authentication(authentication.TokenAuthentication):
             raise exceptions.AuthenticationFailed(_("User inactive or deleted."))
 
         return (token.user, token)
-
-    def authenticate_header(self, request):
-        return self.keyword
