@@ -37,8 +37,9 @@ class BaseTests(TestCase):
         upper_case_email_entry.save()
 
         user = User(username="example_user")
+        token = AuthToken(user=user)
         cls.authenticated_client = APIClient()
-        cls.authenticated_client.force_authenticate(user=user)
+        cls.authenticated_client.force_authenticate(user=user, token=token)
         cls.unauthenticated_client = APIClient()
 
     class Meta:
