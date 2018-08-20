@@ -6,10 +6,5 @@ from authentication import models
 
 class Authentication(authentication.TokenAuthentication):
     def authenticate_credentials(self, key):
-        model = models.AuthToken
-        token = model.objects.select_related("user").get(key=key)
-
-        if not token.user.is_active:
-            raise exceptions.AuthenticationFailed(_("User inactive or deleted."))
-
-        return (token.user, token)
+        self.model = models.AuthToken
+        return super(Authentication, self).authenticate_credentials(key)

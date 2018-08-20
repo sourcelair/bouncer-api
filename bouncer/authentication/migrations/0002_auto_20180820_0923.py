@@ -9,27 +9,39 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('authentication', '0001_initial'),
+        ("authentication", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='AuthToken',
+            name="AuthToken",
             fields=[
-                ('key', models.CharField(default=authentication.models.AuthToken.generate_key, editable=False, max_length=32, primary_key=True, serialize=False, verbose_name='Key')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Created')),
-                ('user', models.ManyToManyField(related_name='auth_token', to=settings.AUTH_USER_MODEL, verbose_name='User')),
+                (
+                    "key",
+                    models.CharField(
+                        default=authentication.models.AuthToken.generate_key,
+                        editable=False,
+                        max_length=32,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="Key",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(auto_now_add=True, verbose_name="Created"),
+                ),
+                (
+                    "user",
+                    models.ManyToManyField(
+                        related_name="auth_token",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="User",
+                    ),
+                ),
             ],
-            options={
-                'verbose_name': 'AuthToken',
-                'verbose_name_plural': 'AuthTokens',
-            },
+            options={"verbose_name": "AuthToken", "verbose_name_plural": "AuthTokens"},
         ),
-        migrations.RemoveField(
-            model_name='usertoken',
-            name='user',
-        ),
-        migrations.DeleteModel(
-            name='UserToken',
-        ),
+        migrations.RemoveField(model_name="usertoken", name="user"),
+        migrations.DeleteModel(name="UserToken"),
     ]

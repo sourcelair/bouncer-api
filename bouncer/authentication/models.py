@@ -8,7 +8,9 @@ class AuthToken(models.Model):
     def generate_key():
         return get_random_string(length=32)
 
-    key = models.CharField(_("Key"), max_length=32, default=generate_key, primary_key=True, editable=False)
+    key = models.CharField(
+        _("Key"), max_length=32, default=generate_key, primary_key=True, editable=False
+    )
     user = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name="auth_token", verbose_name=_("User")
     )
