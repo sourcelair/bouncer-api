@@ -43,7 +43,9 @@ class BaseTests(TestCase):
         token.save()
         test_token = AuthToken.objects.get(user__username="example_user")
         cls.authenticated_client = APIClient()
-        cls.authenticated_client.credentials(HTTP_AUTHORIZATION='Token '+test_token.key)
+        cls.authenticated_client.credentials(
+            HTTP_AUTHORIZATION="Token " + test_token.key
+        )
         cls.unauthenticated_client = APIClient()
 
     class Meta:
