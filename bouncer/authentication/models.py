@@ -3,8 +3,10 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.crypto import get_random_string
 
+
 def generate_key():
     return get_random_string(length=32)
+
 
 class AuthToken(models.Model):
     key = models.CharField(
