@@ -4,5 +4,6 @@ from authentication import models
 
 @admin.register(models.AuthToken)
 class AuthTokenAdmin(admin.ModelAdmin):
-    fields = ["user"]
+    fields = ["user", "key"]
     search_fields = ["user", "key"]
+    readonly_fields = ["key"]

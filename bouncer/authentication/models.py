@@ -3,7 +3,6 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.crypto import get_random_string
 
-
 class AuthToken(models.Model):
     def generate_key():
         return get_random_string(length=32)
