@@ -1,6 +1,8 @@
 from rest_framework.response import Response
-from rest_framework import views
+from rest_framework import views, viewsets
 from collections import namedtuple
+from rest_framework.decorators import action
+from blacklist import models
 from blacklist.brain import (
     is_ip_blacklisted,
     is_email_blacklisted,
@@ -8,7 +10,7 @@ from blacklist.brain import (
 )
 
 
-class RequestView(views.APIView):
+class GetRequestView(views.APIView):
     def get(self, request):
         result_list = []
         email_query = request.GET.getlist("email")
@@ -27,3 +29,17 @@ class RequestView(views.APIView):
             response = {"kind": "ip", "value": ip, "result": result}
             result_list.append(response)
         return Response(result_list)
+
+class PostRequestViewSet(viewsets.ViewSet):
+    @action(methods=['post'], detail=True)
+    def add_entry(self, request, pk=None):
+        for entry in request.body:
+            if entry["kind"] == "ip":
+                ip_entry = models.IPEntry(entry_value=entry["value"])
+                ip_entry.save()
+            elif entry["kind"] == "email":
+                email_entry = models.EmailEntry(entry_value=entry["value"])
+                email_entry.save()
+            elif entry["kind"] == "email_host":
+                host_entry = models.EmailHostEntry(entry_value=entry["value"])
+                host_entry.save()
