@@ -30,8 +30,9 @@ class GetRequestView(views.APIView):
             result_list.append(response)
         return Response(result_list)
 
+
 class PostRequestViewSet(viewsets.ViewSet):
-    @action(methods=['post'], detail=True)
+    @action(methods=["post"], detail=True)
     def add_entry(self, request, pk=None):
         for entry in request.body:
             if entry["kind"] == "ip":
