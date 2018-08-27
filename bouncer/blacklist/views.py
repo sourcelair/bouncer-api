@@ -44,3 +44,4 @@ class PostRequestViewSet(viewsets.ViewSet):
             elif entry["kind"] == "email_host":
                 host_entry = models.EmailHostEntry(entry_value=entry["value"])
                 host_entry.save()
+        return Response(status_code=201)
