@@ -1,4 +1,5 @@
 from rest_framework import permissions
+import json
 
 
 class GetRequestViewPermission(permissions.BasePermission):
@@ -17,7 +18,10 @@ class GetRequestViewPermission(permissions.BasePermission):
 
 class PostRequestViewSetPermission(permissions.BasePermission):
     def has_permission(self, request, view):
-        for entry in request.body:
+        if request.method != "POST":
+            return True
+        data = json.loads(request.body)
+        for entry in data:
             if entry["kind"] == "ip":
                 if not request.user.has_perm("blacklist.add_ipentry"):
                     return False
