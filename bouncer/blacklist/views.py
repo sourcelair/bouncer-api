@@ -4,6 +4,7 @@ from collections import namedtuple
 from rest_framework.decorators import action
 from blacklist import models
 import json
+from blacklist.serializers import PostRequestSerializer
 from blacklist.brain import (
     is_ip_blacklisted,
     is_email_blacklisted,
@@ -37,13 +38,16 @@ class PostRequestViewSet(viewsets.ViewSet):
     def add_entry(self, request, pk=None):
         data = json.loads(request.body)
         for entry in data:
-            if entry["kind"] == "ip":
-                ip_entry = models.IPEntry(entry_value=entry["value"])
+            serializer = PostRequestSerializer(data=entry)
+            if not serializer.is_valid():
+                return Response(status=400)
+            if serializer.validated_data["kind"] == "ip":
+                ip_entry = models.IPEntry(entry_value=serializer.validated_data["value"])
                 ip_entry.save()
-            elif entry["kind"] == "email":
-                email_entry = models.EmailEntry(entry_value=entry["value"])
+            elif serializer.validated_data["kind"] == "email":
+                email_entry = models.EmailEntry(entry_value=serializer.validated_data["value"])
                 email_entry.save()
-            elif entry["kind"] == "email_host":
-                host_entry = models.EmailHostEntry(entry_value=entry["value"])
+            elif serializer.validated_data["kind"] == "email_host":
+                host_entry = models.EmailHostEntry(entry_value=serializer.validated_data["value"])
                 host_entry.save()
         return Response(status=201)
