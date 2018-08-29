@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from blacklist.serializers import PostRequestSerializer
 import json
 
 
@@ -22,13 +23,15 @@ class PostRequestViewSetPermission(permissions.BasePermission):
             return True
         data = json.loads(request.body)
         for entry in data:
-            if entry["kind"] == "ip":
-                if not request.user.has_perm("blacklist.add_ipentry"):
-                    return False
-            elif entry["kind"] == "email":
-                if not request.user.has_perm("blacklist.add_emailentry"):
-                    return False
-            elif entry["kind"] == "email_host":
-                if not request.user.has_perm("blacklist.add_emailhostentry"):
-                    return False
+            serializer = PostRequestSerializer(data=entry)
+            if serializer.is_valid():
+                if serializer.validated_data["kind"] == "ip":
+                    if not request.user.has_perm("blacklist.add_ipentry"):
+                        return False
+                elif serializer.validated_data["kind"] == "email":
+                    if not request.user.has_perm("blacklist.add_emailentry"):
+                        return False
+                elif serializer.validated_data["kind"] == "email_host":
+                    if not request.user.has_perm("blacklist.add_emailhostentry"):
+                        return False
         return True
