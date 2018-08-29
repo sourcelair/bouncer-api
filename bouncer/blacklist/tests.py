@@ -77,7 +77,7 @@ class BaseTests(TestCase):
         authorized_token.save()
         one_permission_user = User(username="user_with_one_permission")
         one_permission_user.save()
-        one_permission_user.user_permissions.add(ip_permission)
+        one_permission_user.user_permissions.add(view_ip_permission)
         one_permission_token = AuthToken(user=one_permission_user)
         one_permission_token.save()
         cls.authenticated_client = APIClient()
