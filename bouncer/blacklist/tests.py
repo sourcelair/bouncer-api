@@ -75,6 +75,11 @@ class BaseTests(TestCase):
         )
         authorized_token = AuthToken(user=authorized_user)
         authorized_token.save()
+        one_permission_user = User(username="user_with_one_permission")
+        one_permission_user.save()
+        one_permission_user.user_permissions.add(ip_permission)
+        one_permission_token = AuthToken(user=one_permission_user)
+        one_permission_token.save()
         cls.authenticated_client = APIClient()
         cls.authenticated_client.credentials(
             HTTP_AUTHORIZATION=f"Token {unauthorized_token.key}"
@@ -84,6 +89,10 @@ class BaseTests(TestCase):
             HTTP_AUTHORIZATION=f"Token {authorized_token.key}"
         )
         cls.unauthenticated_client = APIClient()
+        cls.one_permission_client = APIClient()
+        cls.one_permission_client.credentials(
+            HTTP_AUTHORIZATION=f"Token {one_permission_token}"
+        )
 
     class Meta:
         abstract = True
@@ -471,6 +480,26 @@ class GetRequestViewTests(BaseTests):
         Test that checking a query correctly returns status code 403.
         """
         response = self.authenticated_client.get(
+            "/blacklist/",
+            {
+                "ip": self.lower_case_blacklisted_ip,
+                "email": self.lower_case_blacklisted_email,
+                "email_host": self.lower_case_blacklisted_host,
+            },
+        )
+        self.assertEqual(response.status_code, 403)
+
+    def test_query_with_one_permission_client(self):
+        """
+        Test that checking a query correctly returns status code 200
+        when request for ip entry, but when requests for all entries returns status code 401.
+        """
+        response = self.one_permission_client.get(
+            "/blacklist/", {"ip": self.lower_case_blacklisted_ip}
+        )
+        self.assertEqual(response.status_code, 200)
+
+        response = self.one_permission_client.get(
             "/blacklist/",
             {
                 "ip": self.lower_case_blacklisted_ip,

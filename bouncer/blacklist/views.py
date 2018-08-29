@@ -42,12 +42,18 @@ class PostRequestViewSet(viewsets.ViewSet):
             if not serializer.is_valid():
                 return Response(status=400)
             if serializer.validated_data["kind"] == "ip":
-                ip_entry = models.IPEntry(entry_value=serializer.validated_data["value"])
+                ip_entry = models.IPEntry(
+                    entry_value=serializer.validated_data["value"]
+                )
                 ip_entry.save()
             elif serializer.validated_data["kind"] == "email":
-                email_entry = models.EmailEntry(entry_value=serializer.validated_data["value"])
+                email_entry = models.EmailEntry(
+                    entry_value=serializer.validated_data["value"]
+                )
                 email_entry.save()
             elif serializer.validated_data["kind"] == "email_host":
-                host_entry = models.EmailHostEntry(entry_value=serializer.validated_data["value"])
+                host_entry = models.EmailHostEntry(
+                    entry_value=serializer.validated_data["value"]
+                )
                 host_entry.save()
         return Response(status=201)
