@@ -48,7 +48,10 @@ REST_FRAMEWORK = {
         "authentication.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+        "authentication.permissions.ViewPermission",
+    ),
 }
 
 MIDDLEWARE = [
