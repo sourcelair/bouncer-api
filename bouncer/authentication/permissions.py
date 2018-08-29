@@ -21,17 +21,16 @@ class PostRequestViewSetPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method != "POST":
             return True
-        data = json.loads(request.body)
-        for entry in data:
-            serializer = PostRequestSerializer(data=entry)
-            if serializer.is_valid():
-                if serializer.validated_data["kind"] == "ip":
-                    if not request.user.has_perm("blacklist.add_ipentry"):
-                        return False
-                elif serializer.validated_data["kind"] == "email":
-                    if not request.user.has_perm("blacklist.add_emailentry"):
-                        return False
-                elif serializer.validated_data["kind"] == "email_host":
-                    if not request.user.has_perm("blacklist.add_emailhostentry"):
-                        return False
+        serializer = PostRequestSerializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        for entry in serializer.validated_data:
+            if entry["kind"] == "ip":
+                if not request.user.has_perm("blacklist.add_ipentry"):
+                    return False
+            elif entry["kind"] == "email":
+                if not request.user.has_perm("blacklist.add_emailentry"):
+                    return False
+            elif entry["kind"] == "email_host":
+                if not request.user.has_perm("blacklist.add_emailhostentry"):
+                    return False
         return True

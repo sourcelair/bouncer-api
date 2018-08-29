@@ -36,24 +36,16 @@ class GetRequestView(views.APIView):
 class PostRequestViewSet(viewsets.ViewSet):
     @action(methods=["post"], detail=True)
     def add_entry(self, request, pk=None):
-        data = json.loads(request.body)
-        for entry in data:
-            serializer = PostRequestSerializer(data=entry)
-            if not serializer.is_valid():
-                return Response(status=400)
-            if serializer.validated_data["kind"] == "ip":
-                ip_entry = models.IPEntry(
-                    entry_value=serializer.validated_data["value"]
-                )
+        serializer = PostRequestSerializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        for entry in serializer.validated_data:
+            if entry["kind"] == "ip":
+                ip_entry = models.IPEntry(entry_value=entry["value"])
                 ip_entry.save()
-            elif serializer.validated_data["kind"] == "email":
-                email_entry = models.EmailEntry(
-                    entry_value=serializer.validated_data["value"]
-                )
+            elif entry["kind"] == "email":
+                email_entry = models.EmailEntry(entry_value=entry["value"])
                 email_entry.save()
-            elif serializer.validated_data["kind"] == "email_host":
-                host_entry = models.EmailHostEntry(
-                    entry_value=serializer.validated_data["value"]
-                )
+            elif entry["kind"] == "email_host":
+                host_entry = models.EmailHostEntry(entry_value=entry["value"])
                 host_entry.save()
         return Response(status=201)
