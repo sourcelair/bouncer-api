@@ -477,8 +477,14 @@ class RequestViewTests(BaseTests):
 
     def test_query_with_one_permission_client(self):
         """
-        Test that checking a query correctly returns status code 403.
+        Test that checking a query correctly returns status code 200
+        when request for ip entry, but when requests for all entries returns status code 401.
         """
+        response = self.one_permission_client.get(
+            "/blacklist/", {"ip": self.lower_case_blacklisted_ip}
+        )
+        self.assertEqual(response.status_code, 200)
+
         response = self.one_permission_client.get(
             "/blacklist/",
             {
