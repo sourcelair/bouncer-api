@@ -37,12 +37,18 @@ class BlacklistView(views.APIView):
         serializer.is_valid(raise_exception=True)
         for entry in serializer.validated_data:
             if entry["kind"] == "ip":
-                ip_entry = models.IPEntry(entry_value=entry["value"])
+                ip_entry = models.IPEntry(
+                    entry_value=entry["value"], reason=entry["reason"]
+                )
                 ip_entry.save()
             elif entry["kind"] == "email":
-                email_entry = models.EmailEntry(entry_value=entry["value"])
+                email_entry = models.EmailEntry(
+                    entry_value=entry["value"], reason=entry["reason"]
+                )
                 email_entry.save()
             elif entry["kind"] == "email_host":
-                host_entry = models.EmailHostEntry(entry_value=entry["value"])
+                host_entry = models.EmailHostEntry(
+                    entry_value=entry["value"], reason=entry["reason"]
+                )
                 host_entry.save()
         return Response(status=201)
