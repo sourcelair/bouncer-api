@@ -574,14 +574,38 @@ class PostRequestTests(BaseTests):
         )
         self.assertEqual(response.status_code, 403)
 
-    def test_add_blacklisted_entry(self):
+    def test_add_blacklisted_ip(self):
         """
-        Test that checking a query for adding already blacklisted entry correctly
+        Test that checking a query for adding already blacklisted ip correctly
         returns status code 409.
         """
         response = self.authorized_client.post(
             "/blacklist/",
             [{"kind": "ip", "value": self.lower_case_blacklisted_ip}],
+            format="json",
+        )
+        self.assertEqual(response.status_code, 409)
+
+    def test_add_blacklisted_email(self):
+        """
+        Test that checking a query for adding already blacklisted email correctly
+        returns status code 409.
+        """
+        response = self.authorized_client.post(
+            "/blacklist/",
+            [{"kind": "email", "value": self.lower_case_blacklisted_email}],
+            format="json",
+        )
+        self.assertEqual(response.status_code, 409)
+
+    def test_add_blacklisted_email_host(self):
+        """
+        Test that checking a query for adding already blacklisted email host correctly
+        returns status code 409.
+        """
+        response = self.authorized_client.post(
+            "/blacklist/",
+            [{"kind": "email_host", "value": self.lower_case_blacklisted_host}],
             format="json",
         )
         self.assertEqual(response.status_code, 409)
