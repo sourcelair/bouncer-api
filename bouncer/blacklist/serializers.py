@@ -21,4 +21,14 @@ class BlacklistResourceSerializer(serializers.Serializer):
             r"[\w!#$%&\'*+-/=?^_`{|}~.]+@[\w\.-]+", data["value"]
         ):
             raise serializers.ValidationError("Value is not an email.")
+        elif data["kind"] == "email_host":
+            if len(data["value"]) > 255:
+                raise serializers.ValidationError("Value is not an email host.")
+            if data["value"][-1] == ".":
+                data["value"] = data["value"][
+                    :-1
+                ]  # strip exactly one dot from the right, if present
+            allowed = re.compile("(?!-)[A-Z\d-]{1,63}(?<!-)$", re.IGNORECASE)
+            if not all(allowed.match(x) for x in data["value"].split(".")):
+                raise serializers.ValidationError("Value is not an email host.")
         return data
