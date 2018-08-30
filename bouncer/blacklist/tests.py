@@ -324,7 +324,7 @@ class ModelTests(BaseTests):
         )
 
 
-class GetRequestViewTests(BaseTests):
+class GetRequestTests(BaseTests):
     def test_blacklisted_ip_with_authorized_client(self):
         """
         Test that checking a blacklisted ip correctly returns True.
@@ -510,13 +510,13 @@ class GetRequestViewTests(BaseTests):
         self.assertEqual(response.status_code, 403)
 
 
-class PostRequestViewSetTests(BaseTests):
+class PostRequestTests(BaseTests):
     def test_add_ip_with_authorized_client(self):
         """
         Test that checking a blacklisted ip correctly returns status code 200.
         """
         response = self.authorized_client.post(
-            "/blacklist/add/",
+            "/blacklist/",
             [{"kind": "ip", "value": self.not_blacklisted_ip}],
             format="json",
         )
@@ -527,7 +527,7 @@ class PostRequestViewSetTests(BaseTests):
         Test that checking a blacklisted email correctly returns status code 200.
         """
         response = self.authorized_client.post(
-            "/blacklist/add/",
+            "/blacklist/",
             [{"kind": "email", "value": self.not_blacklisted_email}],
             format="json",
         )
@@ -538,7 +538,7 @@ class PostRequestViewSetTests(BaseTests):
         Test that checking a blacklisted email host correctly returns status code 200.
         """
         response = self.authorized_client.post(
-            "/blacklist/add/",
+            "/blacklist/",
             [{"kind": "email_host", "value": self.not_blacklisted_host}],
             format="json",
         )
@@ -549,7 +549,7 @@ class PostRequestViewSetTests(BaseTests):
         Test that checking a query correctly returns status code 401.
         """
         response = self.unauthenticated_client.post(
-            "/blacklist/add/",
+            "/blacklist/",
             [
                 {"kind": "ip", "value": self.not_blacklisted_ip},
                 {"kind": "email", "value": self.not_blacklisted_email},
@@ -564,7 +564,7 @@ class PostRequestViewSetTests(BaseTests):
         Test that checking a query correctly returns status code 403.
         """
         response = self.authenticated_client.post(
-            "/blacklist/add/",
+            "/blacklist/",
             [
                 {"kind": "ip", "value": self.not_blacklisted_ip},
                 {"kind": "email", "value": self.not_blacklisted_email},

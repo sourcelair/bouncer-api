@@ -3,11 +3,4 @@ from blacklist import views
 
 app_name = "blacklist"
 
-urlpatterns = [
-    path("", views.BlacklistView.as_view(), name="get_request"),
-    path(
-        "add/",
-        views.PostRequestViewSet.as_view({"post": "add_entry"}),
-        name="post_request",
-    ),
-]
+urlpatterns = [path("", views.BlacklistView.as_view(), name="blacklist_request")]

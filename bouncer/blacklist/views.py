@@ -13,7 +13,7 @@ from blacklist.brain import (
 
 
 class BlacklistView(views.APIView):
-    def get(self, request):
+    def get(self, request, format=None):
         result_list = []
         email_query = request.GET.getlist("email")
         for email in email_query:
@@ -32,10 +32,7 @@ class BlacklistView(views.APIView):
             result_list.append(response)
         return Response(result_list)
 
-
-class PostRequestViewSet(viewsets.ViewSet):
-    @action(methods=["post"], detail=True)
-    def add_entry(self, request, pk=None):
+    def post(self, request, format=None):
         serializer = BlacklistResourceSerializer(data=request.data, many=True)
         serializer.is_valid(raise_exception=True)
         for entry in serializer.validated_data:
