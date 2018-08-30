@@ -1,6 +1,11 @@
 from rest_framework.response import Response
-from rest_framework import views
+from rest_framework import views, viewsets
 from collections import namedtuple
+from rest_framework.decorators import action
+from blacklist import models
+import json
+from blacklist.serializers import BlacklistResourceSerializer
+from django.db.utils import IntegrityError
 from blacklist.brain import (
     is_ip_blacklisted,
     is_email_blacklisted,
@@ -8,8 +13,8 @@ from blacklist.brain import (
 )
 
 
-class RequestView(views.APIView):
-    def get(self, request):
+class BlacklistView(views.APIView):
+    def get(self, request, format=None):
         result_list = []
         email_query = request.GET.getlist("email")
         for email in email_query:
@@ -27,3 +32,33 @@ class RequestView(views.APIView):
             response = {"kind": "ip", "value": ip, "result": result}
             result_list.append(response)
         return Response(result_list)
+
+    def post(self, request, format=None):
+        serializer = BlacklistResourceSerializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        for entry in serializer.validated_data:
+            if entry["kind"] == "ip":
+                try:
+                    ip_entry = models.IPEntry(
+                        entry_value=entry["value"], reason=entry["reason"]
+                    )
+                    ip_entry.save()
+                except IntegrityError:
+                    return Response(status=409)
+            elif entry["kind"] == "email":
+                try:
+                    email_entry = models.EmailEntry(
+                        entry_value=entry["value"], reason=entry["reason"]
+                    )
+                    email_entry.save()
+                except IntegrityError:
+                    return Response(status=409)
+            elif entry["kind"] == "email_host":
+                try:
+                    host_entry = models.EmailHostEntry(
+                        entry_value=entry["value"], reason=entry["reason"]
+                    )
+                    host_entry.save()
+                except IntegrityError:
+                    return Response(status=409)
+        return Response(serializer.validated_data, status=201)
