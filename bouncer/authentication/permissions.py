@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from blacklist.serializers import PostRequestSerializer
+from blacklist.serializers import BlacklistResourceSerializer
 import json
 
 
@@ -16,7 +16,7 @@ class RequestPermission(permissions.BasePermission):
                 if not request.user.has_perm("blacklist.view_emailhostentry"):
                     return False
         elif request.method == "POST":
-            serializer = PostRequestSerializer(data=request.data, many=True)
+            serializer = BlacklistResourceSerializer(data=request.data, many=True)
             serializer.is_valid(raise_exception=True)
             for entry in serializer.validated_data:
                 if entry["kind"] == "ip":

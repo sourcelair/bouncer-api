@@ -3,7 +3,7 @@ import ipaddress
 import re
 
 
-class PostRequestSerializer(serializers.Serializer):
+class BlacklistResourceSerializer(serializers.Serializer):
     kind = serializers.ChoiceField(choices=["ip", "email", "email_host"])
     value = serializers.CharField(max_length=254)
     reason = serializers.CharField(allow_blank=True, default="")
