@@ -3,7 +3,7 @@ from blacklist.serializers import BlacklistResourceSerializer
 import json
 
 
-class RequestPermission(permissions.BasePermission):
+class BlacklistPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method == "GET":
             if "ip" in request.GET:
