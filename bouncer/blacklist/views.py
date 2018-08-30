@@ -51,4 +51,4 @@ class BlacklistView(views.APIView):
                     entry_value=entry["value"], reason=entry["reason"]
                 )
                 host_entry.save()
-        return Response(status=201)
+        return Response(serializer.validated_data, status=201)
