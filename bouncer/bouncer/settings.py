@@ -50,8 +50,7 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
-        "authentication.permissions.GetRequestViewPermission",
-        "authentication.permissions.PostRequestViewSetPermission",
+        "authentication.permissions.RequestPermission",
     ),
 }
 
