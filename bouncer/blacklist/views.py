@@ -12,7 +12,7 @@ from blacklist.brain import (
 )
 
 
-class GetRequestView(views.APIView):
+class BlacklistView(views.APIView):
     def get(self, request):
         result_list = []
         email_query = request.GET.getlist("email")
