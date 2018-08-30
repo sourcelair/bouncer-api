@@ -5,6 +5,7 @@ from rest_framework.decorators import action
 from blacklist import models
 import json
 from blacklist.serializers import BlacklistResourceSerializer
+from django.db.utils import IntegrityError
 from blacklist.brain import (
     is_ip_blacklisted,
     is_email_blacklisted,
@@ -37,18 +38,27 @@ class BlacklistView(views.APIView):
         serializer.is_valid(raise_exception=True)
         for entry in serializer.validated_data:
             if entry["kind"] == "ip":
-                ip_entry = models.IPEntry(
-                    entry_value=entry["value"], reason=entry["reason"]
-                )
-                ip_entry.save()
+                try:
+                    ip_entry = models.IPEntry(
+                        entry_value=entry["value"], reason=entry["reason"]
+                    )
+                    ip_entry.save()
+                except IntegrityError:
+                    return Response(status=409)
             elif entry["kind"] == "email":
-                email_entry = models.EmailEntry(
-                    entry_value=entry["value"], reason=entry["reason"]
-                )
-                email_entry.save()
+                try:
+                    email_entry = models.EmailEntry(
+                        entry_value=entry["value"], reason=entry["reason"]
+                    )
+                    email_entry.save()
+                except IntegrityError:
+                    return Response(status=409)
             elif entry["kind"] == "email_host":
-                host_entry = models.EmailHostEntry(
-                    entry_value=entry["value"], reason=entry["reason"]
-                )
-                host_entry.save()
+                try:
+                    host_entry = models.EmailHostEntry(
+                        entry_value=entry["value"], reason=entry["reason"]
+                    )
+                    host_entry.save()
+                except IntegrityError:
+                    return Response(status=409)
         return Response(serializer.validated_data, status=201)

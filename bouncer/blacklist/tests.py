@@ -573,3 +573,15 @@ class PostRequestTests(BaseTests):
             format="json",
         )
         self.assertEqual(response.status_code, 403)
+
+    def test_add_blacklisted_entry(self):
+        """
+        Test that checking a query for adding already blacklisted entry correctly
+        returns status code 409.
+        """
+        response = self.authorized_client.post(
+            "/blacklist/",
+            [{"kind": "ip", "value": self.lower_case_blacklisted_ip}],
+            format="json",
+        )
+        self.assertEqual(response.status_code, 409)

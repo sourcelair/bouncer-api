@@ -25,9 +25,7 @@ class BlacklistResourceSerializer(serializers.Serializer):
             if len(data["value"]) > 255:
                 raise serializers.ValidationError("Value is not an email host.")
             if data["value"][-1] == ".":
-                data["value"] = data["value"][
-                    :-1
-                ]  # strip exactly one dot from the right, if present
+                data["value"] = data["value"][:-1]
             allowed = re.compile("(?!-)[A-Z\d-]{1,63}(?<!-)$", re.IGNORECASE)
             if not all(allowed.match(x) for x in data["value"].split(".")):
                 raise serializers.ValidationError("Value is not an email host.")
