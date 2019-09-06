@@ -2,7 +2,7 @@ language: python
 python:
   - "3.6"
 install:
-  - pip install pipenv==2018.7.1
+  - pip install pipenv==2018.11.26
   - pipenv install --dev --system
 script:
   - black --check ./
